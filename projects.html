@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Explore Master Scapes signature hardscape projects across Central California — luxury pavers, pool decks, outdoor kitchens, and complete backyard transformations.">
+    <meta property="og:title" content="Master Scapes Signature Projects">
+    <meta property="og:description"
+        content="Before & after transformations, project highlights, and client testimonials from Central California's premier hardscape contractor.">
+    <meta property="og:image" content="images/UltimateBackyardPage_Function-scaled-1920x1280.webp">
+    <meta property="og:type" content="website">
+    <title>Master Scapes Signature Projects</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Projects Page Styles */
+        .projects-hero {
+            height: 60vh;
+            min-height: 500px;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.75)),
+                url('images/UltimateBackyardPage_Function-scaled-1920x1280.webp');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: var(--nav-height);
+        }
+
+        .projects-section {
+            padding: 100px 0;
+            background: var(--primary-dark);
+        }
+
+        .projects-section.alt {
+            background: var(--secondary-dark);
+        }
+
+        /* Before / After Gallery */
+        .ba-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .ba-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            border-radius: 4px;
+            background: var(--secondary-dark);
+            transition: var(--transition);
+        }
+
+        .ba-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-gold);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .ba-card img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.8s cubic-bezier(0.2, 1, 0.2, 1);
+        }
+
+        .ba-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .ba-label {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--accent-gold);
+            color: #000;
+            padding: 6px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .ba-info {
+            padding: 30px;
+        }
+
+        .ba-info h3 {
+            color: var(--accent-gold);
+            font-size: 22px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .ba-info p {
+            color: var(--text-gray);
+            font-size: 16px;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        /* Project Highlights */
+        .highlights-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .highlight-item {
+            text-align: center;
+            padding: 50px 30px;
+            border: 1px solid var(--glass-border);
+            background: var(--primary-dark);
+            transition: var(--transition);
+        }
+
+        .highlight-item:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-5px);
+        }
+
+        .highlight-num {
+            font-size: 64px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            line-height: 1;
+            margin-bottom: 10px;
+            letter-spacing: -2px;
+        }
+
+        .highlight-label {
+            color: var(--text-light);
+            font-size: 16px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        .highlight-sub {
+            color: var(--text-gray);
+            font-size: 14px;
+            margin-top: 10px;
+            font-weight: 300;
+        }
+
+        /* Testimonials */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .testimonial-card {
+            padding: 50px 40px;
+            background: var(--primary-dark);
+            border-left: 3px solid var(--accent-gold);
+            transition: var(--transition);
+        }
+
+        .testimonial-card:hover {
+            transform: translateX(8px);
+        }
+
+        .testimonial-quote {
+            font-size: 48px;
+            color: var(--accent-gold);
+            line-height: 0.5;
+            margin-bottom: 25px;
+            opacity: 0.6;
+        }
+
+        .testimonial-text {
+            color: var(--text-gray);
+            font-size: 17px;
+            font-weight: 300;
+            line-height: 1.9;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            color: var(--text-light);
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .testimonial-location {
+            color: var(--accent-gold);
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 5px;
+            font-weight: 300;
+        }
+
+        .cta-band {
+            background: var(--accent-gold);
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .cta-band h2 {
+            color: #000;
+            font-size: clamp(28px, 4vw, 48px);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .cta-band p {
+            color: rgba(0, 0, 0, 0.7);
+            font-size: 18px;
+            font-weight: 300;
+            margin-bottom: 40px;
+        }
+
+        .btn-dark {
+            background: #000;
+            color: var(--accent-gold);
+            letter-spacing: 3px;
+        }
+
+        .btn-dark:hover {
+            background: #fff;
+            color: #000;
+            transform: translateY(-5px);
+        }
+
+        @media (max-width: 1024px) {
+            .highlights-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .highlights-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-brand">
+                    <a href="index.html">
+                        <img src="images/Master Scapes POC.jpg" alt="Master Scapes Logo" class="logo">
+                    </a>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html#home" class="nav-link">Home</a></li>
+                    <li><a href="index.html#services" class="nav-link">Services</a></li>
+                    <li><a href="index.html#about" class="nav-link">About</a></li>
+                    <li><a href="index.html#gallery" class="nav-link">Gallery</a></li>
+                    <li><a href="projects.html" class="nav-link active">Projects</a></li>
+                    <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <button class="mobile-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Projects Hero -->
+    <section class="projects-hero">
+        <div class="hero-content">
+            <h1 class="hero-title">SIGNATURE PROJECTS</h1>
+            <p class="hero-tagline">MASTER SCAPES PORTFOLIO</p>
+            <p class="hero-subtitle">Real Transformations. Real Craftsmanship.</p>
+        </div>
+    </section>
+
+    <!-- Before / After Gallery -->
+    <section class="projects-section">
+        <div class="container">
+            <h2 class="section-title">BEFORE &amp; AFTER</h2>
+            <p class="section-subtitle">TRANSFORMATION GALLERY</p>
+            <div class="ba-grid">
+
+                <div class="ba-card reveal">
+                    <img src="images/Travertine-Pavers-1024x683.avif" alt="Travertine Pool Deck">
+                    <span class="ba-label">After</span>
+                    <div class="ba-info">
+                        <h3>Travertine Pool Deck</h3>
+                        <p>A complete pool surround replacement using premium travertine pavers — slip-resistant,
+                            elegant, and built to withstand Central California summers.</p>
+                    </div>
+                </div>
+
+                <div class="ba-card reveal">
+                    <img src="images/Concrete-Pavers-1024x567.avif" alt="Modern Concrete Patio">
+                    <span class="ba-label">After</span>
+                    <div class="ba-info">
+                        <h3>Modern Concrete Patio</h3>
+                        <p>Contemporary large-format concrete pavers installed to create a seamless indoor-outdoor
+                            entertainment space with precision craftsmanship.</p>
+                    </div>
+                </div>
+
+                <div class="ba-card reveal">
+                    <img src="images/Acrylic-Topped-Concrete-1024x683.avif" alt="Acrylic Deck Coating">
+                    <span class="ba-label">After</span>
+                    <div class="ba-info">
+                        <h3>Acrylic Deck Resurfacing</h3>
+                        <p>High-performance acrylic coating over existing concrete — a cost-effective way to transform
+                            worn surfaces with a fresh, durable finish.</p>
+                    </div>
+                </div>
+
+                <div class="ba-card reveal">
+                    <img src="images/476790760_615844884526223_7264637262798902124_n.jpg" alt="Custom Hardscape">
+                    <span class="ba-label">After</span>
+                    <div class="ba-info">
+                        <h3>Custom Hardscape Design</h3>
+                        <p>A luxury outdoor living area featuring custom stonework, elevated seating, and a seamless
+                            flow from indoor to outdoor entertaining.</p>
+                    </div>
+                </div>
+
+                <div class="ba-card reveal">
+                    <img src="images/480141365_618220387622006_8633764257277710164_n.jpg"
+                        alt="Artisan Stone Installation">
+                    <span class="ba-label">After</span>
+                    <div class="ba-info">
+                        <h3>Artisan Stone Work</h3>
+                        <p>Handcrafted stone installation combining natural textures with precise cuts — a signature
+                            example of Master Scapes craftsmanship.</p>
+                    </div>
+                </div>
+
+                <div class="ba-card reveal">
+                    <img src="images/UltimateBackyardPage_Function-scaled-1920x1280.webp" alt="Ultimate Backyard">
+                    <span class="ba-label">After</span>
+                    <div class="ba-info">
+                        <h3>Ultimate Backyard Transformation</h3>
+                        <p>A complete outdoor living system — pavers, outdoor kitchen, fire feature, and landscape
+                            design — delivering the pinnacle of craftsmanship.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Highlights -->
+    <section class="projects-section alt">
+        <div class="container">
+            <h2 class="section-title">BY THE NUMBERS</h2>
+            <p class="section-subtitle">MASTER SCAPES IMPACT</p>
+            <div class="highlights-grid">
+                <div class="highlight-item reveal">
+                    <div class="highlight-num">150+</div>
+                    <div class="highlight-label">Projects Completed</div>
+                    <div class="highlight-sub">Across Central California</div>
+                </div>
+                <div class="highlight-item reveal">
+                    <div class="highlight-num">10+</div>
+                    <div class="highlight-label">Years of Craftsmanship</div>
+                    <div class="highlight-sub">Built on discipline and precision</div>
+                </div>
+                <div class="highlight-item reveal">
+                    <div class="highlight-num">100%</div>
+                    <div class="highlight-label">Client Satisfaction</div>
+                    <div class="highlight-sub">Our standard, every project</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Client Testimonials -->
+    <section class="projects-section">
+        <div class="container">
+            <h2 class="section-title">CLIENT TESTIMONIALS</h2>
+            <p class="section-subtitle">WHAT OUR CLIENTS SAY</p>
+            <div class="testimonials-grid">
+
+                <div class="testimonial-card reveal">
+                    <div class="testimonial-quote">"</div>
+                    <p class="testimonial-text">Dennis and his crew transformed our backyard completely. The travertine
+                        pool deck looks stunning and every detail was handled with precision. We couldn't be happier
+                        with the result.</p>
+                    <div class="testimonial-author">The Martinez Family</div>
+                    <div class="testimonial-location">Modesto, CA</div>
+                </div>
+
+                <div class="testimonial-card reveal">
+                    <div class="testimonial-quote">"</div>
+                    <p class="testimonial-text">Master Scapes delivered exactly what they promised — on time, on budget,
+                        and with craftsmanship we've never seen from other contractors. Our patio is the envy of the
+                        neighborhood.</p>
+                    <div class="testimonial-author">Robert &amp; Lisa G.</div>
+                    <div class="testimonial-location">Turlock, CA</div>
+                </div>
+
+                <div class="testimonial-card reveal">
+                    <div class="testimonial-quote">"</div>
+                    <p class="testimonial-text">From the first consultation to the final walkthrough, Dennis brought a
+                        level of professionalism and artistry that sets Master Scapes apart. Truly the pinnacle of
+                        craftsmanship.</p>
+                    <div class="testimonial-author">The Nguyen Family</div>
+                    <div class="testimonial-location">Stockton, CA</div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Band -->
+    <section class="cta-band">
+        <div class="container">
+            <h2>READY TO TRANSFORM YOUR SPACE?</h2>
+            <p>Let's design something extraordinary together.</p>
+            <a href="index.html#contact" class="btn btn-dark">GET A FREE QUOTE</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="images/Master Scapes POC.jpg" alt="Master Scapes" class="footer-logo">
+                    <p class="footer-tagline">Pinnacle of Craftsmanship</p>
+                </div>
+                <div class="footer-info">
+                    <p>&copy; 2025 Master Scapes. All Rights Reserved.</p>
+                    <p>Licensed | Bonded | Insured</p>
+                    <p style="font-size:13px; color:#555; margin-top:10px; font-weight:300; letter-spacing:1px;">Master
+                        Scapes is a flagship brand of Lifestyle Landscape Design &amp; Construction Inc.</p>
+                    <p style="margin-top: 15px;">
+                        <a href="privacy.html"
+                            style="color: var(--accent-gold); text-decoration: none; margin-right: 20px;">Privacy
+                            Policy</a>
+                        <a href="terms.html" style="color: var(--accent-gold); text-decoration: none;">Terms of
+                            Service</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
