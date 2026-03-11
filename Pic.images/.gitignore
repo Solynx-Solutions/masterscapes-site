@@ -1,0 +1,28 @@
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary Files
+*.tmp
+*.temp
+~$*
+
+# Log Files
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# Node modules (if using build tools)
+node_modules/
+
+# Large video files (optional)
+*.mp4
+*.mov
+
+# Office Temporary Files
+~*.docx
+~*.xlsx
+~*.pptx
