@@ -116,14 +116,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = Object.fromEntries(formData);
 
             // Replace with actual GoHighLevel / Zapier webhook
-            const WEBHOOK_URL = 'YOUR_WEBHOOK_URL_HERE';
+            const WEBHOOK_URL = 'https://services.leadconnectorhq.com/hooks/WEBHOOKID';
 
             submitBtn.disabled = true;
             submitBtn.textContent = 'Sending...';
 
             try {
                 // If no actual URL is set, simulate success for visual demonstration
-                if (WEBHOOK_URL === 'YOUR_WEBHOOK_URL_HERE') {
+                if (WEBHOOK_URL.includes('WEBHOOKID')) {
                     await new Promise(resolve => setTimeout(resolve, 1500));
                 } else {
                     const response = await fetch(WEBHOOK_URL, {
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 responseDiv.style.background = 'rgba(197, 160, 89, 0.1)';
                 responseDiv.style.color = '#c5a059';
                 responseDiv.style.border = '1px solid #c5a059';
-                responseDiv.innerHTML = '<strong>Request Received!</strong> We will contact you shortly to schedule your consultation.';
+                responseDiv.innerHTML = '<strong>Thank you.</strong> A project specialist will contact you shortly.';
 
                 masterScapesForm.reset();
             } catch (error) {
