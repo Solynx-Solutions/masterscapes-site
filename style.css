@@ -18,12 +18,26 @@
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    box-sizing: border-box; /* Mobile fix: prevents padding from causing overflow */
 }
 
+/* ── Mobile Safety Rules ─────────────────────────────────────────
+   Prevents horizontal scroll on all iPhone / modern mobile sizes.
+   Do NOT remove these — they are the foundational overflow guard.
+───────────────────────────────────────────────────────────────── */
 html {
     scroll-behavior: smooth;
     background: var(--primary-dark);
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden; /* Mobile fix: global horizontal overflow lock */
+}
+
+/* Mobile fix: constrain all media so nothing breaks out of viewport */
+img,
+video {
+    max-width: 100%;
+    height: auto;
 }
 
 .scroll-progress {
@@ -42,13 +56,18 @@ body {
     line-height: 1.6;
     color: var(--text-light);
     background: var(--primary-dark);
-    overflow-x: hidden;
+    overflow-x: hidden; /* Mobile fix: belt-and-suspenders overflow lock on body */
+    width: 100%;
+    max-width: 100%;
 }
 
+/* Mobile fix: responsive padding via clamp — no overflow on narrow screens */
 .container {
+    width: 100%;
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 40px;
+    padding-left: clamp(16px, 4vw, 40px);
+    padding-right: clamp(16px, 4vw, 40px);
 }
 
 /* Scrollbar */
@@ -88,7 +107,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 40px;
+    /* Mobile fix: use clamp so nav never overflows on small phones */
+    padding: 20px clamp(16px, 4vw, 40px);
     height: var(--nav-height);
 }
 
@@ -205,7 +225,9 @@ body {
     font-size: clamp(48px, 10vw, 120px);
     font-weight: 700;
     margin-bottom: 15px;
-    letter-spacing: 8px;
+    /* Mobile fix: 8px letter-spacing pushes text off-screen on iPhones;
+       clamp brings it down gracefully at narrow widths */
+    letter-spacing: clamp(2px, 1.5vw, 8px);
     text-transform: uppercase;
     color: #fff;
     text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
@@ -213,13 +235,16 @@ body {
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    word-break: normal;
+    overflow-wrap: break-word;
 }
 
 .hero-tagline {
     font-size: clamp(20px, 4vw, 40px);
     color: var(--accent-gold);
     margin-bottom: 30px;
-    letter-spacing: 4px;
+    /* Mobile fix: reduce letter-spacing to prevent tagline from overflowing */
+    letter-spacing: clamp(1px, 1vw, 4px);
     font-weight: 300;
     text-transform: uppercase;
 }
@@ -235,7 +260,8 @@ body {
 /* Buttons */
 .btn {
     display: inline-block;
-    padding: 22px 55px;
+    /* Mobile fix: clamp padding so button doesn't overflow narrow screens */
+    padding: clamp(14px, 3vw, 22px) clamp(24px, 8vw, 55px);
     text-decoration: none;
     font-weight: 600;
     letter-spacing: 3px;
@@ -243,7 +269,7 @@ body {
     transition: var(--transition);
     border: none;
     cursor: pointer;
-    font-size: 16px;
+    font-size: clamp(14px, 2vw, 16px);
     font-family: 'Oswald', sans-serif;
     position: relative;
     overflow: hidden;
@@ -272,18 +298,20 @@ section {
     text-align: center;
     margin-bottom: 20px;
     color: var(--text-light);
-    letter-spacing: 4px;
+    /* Mobile fix: clamp letter-spacing to prevent overflow on narrow screens */
+    letter-spacing: clamp(1px, 1vw, 4px);
     text-transform: uppercase;
     font-weight: 700;
 }
 
 .section-subtitle {
     text-align: center;
-    font-size: clamp(16px, 2vw, 20px);
+    font-size: clamp(14px, 2vw, 20px);
     color: var(--accent-gold);
     margin-bottom: 80px;
     font-weight: 400;
-    letter-spacing: 4px;
+    /* Mobile fix: clamp letter-spacing for subtitle */
+    letter-spacing: clamp(1px, 1vw, 4px);
     text-transform: uppercase;
 }
 
@@ -407,7 +435,8 @@ section {
 .founder-badge {
     position: absolute;
     bottom: 30px;
-    right: -20px;
+    /* Mobile fix: was right:-20px which caused overflow; clamped to stay in-bounds */
+    right: 0;
     background: var(--accent-gold);
     color: #000;
     padding: 12px 25px;
@@ -596,7 +625,8 @@ section {
 
 .contact-form {
     background: var(--primary-dark);
-    padding: 60px;
+    /* Mobile fix: clamp padding so form doesn't overflow on phones */
+    padding: clamp(24px, 5vw, 60px);
     border: 1px solid var(--glass-border);
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
 }
@@ -604,15 +634,16 @@ section {
 .contact-form input,
 .contact-form select,
 .contact-form textarea {
-    width: 100%;
-    padding: 20px;
+    width: 100%; /* Mobile fix: explicit 100% keeps fields in container */
+    padding: clamp(12px, 2vw, 20px);
     margin-bottom: 25px;
     border: 1px solid var(--glass-border);
     font-family: 'Oswald', sans-serif;
-    font-size: 16px;
+    font-size: 16px; /* Keep ≥16px to prevent iOS auto-zoom */
     transition: var(--transition);
     background: var(--secondary-dark);
     color: var(--text-light);
+    box-sizing: border-box; /* Mobile fix: prevent padding from blowing up width */
 }
 
 .contact-form input:focus,
@@ -624,7 +655,7 @@ section {
 }
 
 .contact-form button {
-    width: 100%;
+    width: 100%; /* Mobile fix: full-width button on all screen sizes */
     margin-top: 10px;
 }
 
@@ -645,8 +676,10 @@ section {
 }
 
 .footer-logo {
-    height: 115px;
+    /* Mobile fix: clamp height and add max-width so logo scales on small phones */
+    height: clamp(70px, 18vw, 115px);
     width: auto;
+    max-width: 100%;
     margin-bottom: 25px;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
@@ -692,12 +725,9 @@ section {
     }
 }
 
-/* Responsive */
-@media (max-width: 1200px) {
-    .container {
-        padding: 0 30px;
-    }
+/* ── Responsive Breakpoints ─────────────────────────────────────── */
 
+@media (max-width: 1200px) {
     .about-grid,
     .contact-grid {
         gap: 60px;
@@ -705,7 +735,6 @@ section {
 }
 
 @media (max-width: 1024px) {
-
     .about-grid,
     .contact-grid {
         grid-template-columns: 1fr;
@@ -715,22 +744,30 @@ section {
     .gallery-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-
-    .contact-form {
-        padding: 40px;
-    }
 }
 
+/* ── Mobile: 768px and below ───────────────────────────────────────
+   Covers iPhone SE, iPhone 12/13/14/15/16/17, and most Android.
+   Breakpoints tested: 430, 414, 393, 390, 375, 360px.
+─────────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
     :root {
         --nav-height: 80px;
     }
 
+    /* Mobile fix: section vertical rhythm reduced for small screens */
+    section {
+        padding: 80px 0;
+    }
+
+    /* ── Navigation ──────────────────────────────────────────────── */
+    /* Mobile fix: nav menu drops down as overlay; must not exceed viewport */
     .nav-menu {
         position: fixed;
         top: var(--nav-height);
         left: 0;
-        width: 100%;
+        width: 100%; /* Mobile fix: exactly viewport width, no overflow */
+        max-width: 100vw;
         background: var(--primary-dark);
         flex-direction: column;
         gap: 0;
@@ -743,17 +780,22 @@ section {
     .nav-menu.active {
         height: calc(100vh - var(--nav-height));
         padding: 40px 0;
+        overflow-y: auto;
     }
 
+    /* Mobile fix: links stack vertically and fill the width */
     .nav-link {
         width: 100%;
         text-align: center;
         padding: 20px 0;
         font-size: 20px;
+        letter-spacing: 2px; /* Mobile fix: tighten spacing for nav links */
     }
 
+    /* Mobile fix: show hamburger on mobile */
     .mobile-toggle {
         display: flex;
+        flex-shrink: 0; /* Mobile fix: prevent toggle from being squeezed */
     }
 
     .mobile-toggle.active span:nth-child(1) {
@@ -768,23 +810,212 @@ section {
         transform: translateY(-8px) rotate(-45deg);
     }
 
-    .hero {
-        padding-top: 0;
+    /* Mobile fix: logo constrained so it never pushes hamburger off-screen */
+    .logo {
+        height: 54px;
+        max-width: calc(100vw - 100px); /* Leave room for hamburger button */
     }
 
+    /* ── Hero ────────────────────────────────────────────────────── */
+    .hero {
+        padding-top: 0;
+        /* Mobile fix: disable fixed bg attachment (causes sizing bugs on iOS) */
+        background-attachment: scroll;
+        min-height: 100svh; /* Mobile fix: use svh for proper iPhone viewport */
+    }
+
+    .hero-content {
+        /* Mobile fix: constrain width and add padding so content doesn't touch edges */
+        max-width: 100%;
+        padding: 0 8px;
+    }
+
+    /* Mobile fix: hero title overrides for narrow screens */
+    .hero-title {
+        font-size: clamp(42px, 14vw, 72px);
+        letter-spacing: 3px;
+        word-break: normal;
+        overflow-wrap: break-word;
+    }
+
+    /* Mobile fix: reduce tagline letter spacing further on mobile */
+    .hero-tagline {
+        letter-spacing: 2px;
+        font-size: clamp(14px, 4.5vw, 24px);
+    }
+
+    /* Mobile fix: CTA button full-width on mobile for easy tap target */
+    .hero-content .btn {
+        display: block;
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    /* ── Grids ───────────────────────────────────────────────────── */
+    /* Mobile fix: all grids collapse to single column */
     .services-grid,
     .gallery-grid {
         grid-template-columns: 1fr;
     }
 
-    .logo {
-        height: 54px;
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 40px; /* Mobile fix: tighten about grid gap */
+    }
+
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 40px; /* Mobile fix: tighten contact grid gap */
+    }
+
+    /* ── Service Cards ───────────────────────────────────────────── */
+    /* Mobile fix: reduce padding on service cards for narrow screens */
+    .service-card {
+        padding: 40px 24px;
+    }
+
+    /* ── Gallery ─────────────────────────────────────────────────── */
+    /* Mobile fix: reduce gallery item height on mobile */
+    .gallery-item {
+        height: 280px;
+    }
+
+    /* ── About Section ───────────────────────────────────────────── */
+    /* Mobile fix: hide the decorative border offset to prevent left overflow */
+    .about-image::before {
+        display: none;
+    }
+
+    /* Mobile fix: founder badge brought fully within image bounds */
+    .founder-badge {
+        right: 10px;
+        bottom: 10px;
+        font-size: 12px;
+        letter-spacing: 1px;
+        padding: 8px 16px;
+    }
+
+    /* ── Contact Form ────────────────────────────────────────────── */
+    /* Mobile fix: tighter form padding on phones */
+    .contact-form {
+        padding: 24px 20px;
+    }
+
+    /* Mobile fix: reduce section subtitle bottom margin on mobile */
+    .section-subtitle {
+        margin-bottom: 48px;
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────── */
+    /* Mobile fix: reduce footer top padding */
+    .footer {
+        padding: 60px 0 40px;
+    }
+
+    /* Mobile fix: footer logo gets a max-width constraint on phones */
+    .footer-logo {
+        height: clamp(60px, 16vw, 90px);
+        max-width: 80vw;
+    }
+
+    /* Mobile fix: footer tagline letter spacing tightened */
+    .footer-tagline {
+        letter-spacing: 2px;
+        font-size: 16px;
+    }
+
+    /* Mobile fix: footer links wrap cleanly on narrow screens */
+    .footer-info p:last-of-type a {
+        display: inline-block;
+        margin-bottom: 6px;
+    }
+
+    /* Mobile fix: lifestyle logo inline style override via CSS */
+    .footer-info img {
+        max-width: 60vw !important;
+        height: auto !important;
+        width: auto;
     }
 }
 
-/* ═══════════════════════════════════════════════
-   FLOATING CHAT WIDGET
-═══════════════════════════════════════════════ */
+/* ── Ultra-narrow: 430px and below ────────────────────────────────
+   Targets iPhone SE (3rd gen), iPhone 16/17, and narrowest Androids.
+   Breakpoints tested: 430, 414, 393, 390, 375, 360px.
+   These are additive to the 768px block above.
+────────────────────────────────────────────────────────────────── */
+@media (max-width: 430px) {
+    /* Mobile fix: hero title further reduced for 360-430px screens */
+    .hero-title {
+        font-size: clamp(36px, 11.5vw, 52px);
+        letter-spacing: 2px;
+    }
+
+    /* Mobile fix: hero tagline tighter at very narrow widths */
+    .hero-tagline {
+        font-size: clamp(12px, 4vw, 18px);
+        letter-spacing: 1px;
+    }
+
+    /* Mobile fix: section titles tighter at 360-430px */
+    .section-title {
+        font-size: clamp(28px, 8.5vw, 44px);
+        letter-spacing: 1px;
+    }
+
+    .section-subtitle {
+        font-size: clamp(11px, 3.5vw, 15px);
+        letter-spacing: 0.5px;
+        margin-bottom: 36px;
+    }
+
+    /* Mobile fix: service cards full-width comfortable padding */
+    .service-card {
+        padding: 32px 16px;
+    }
+
+    /* Mobile fix: gallery shorter on tiny screens */
+    .gallery-item {
+        height: 240px;
+    }
+
+    /* Mobile fix: about lead text tightened */
+    .about-lead {
+        font-size: 14px;
+        letter-spacing: 2px;
+    }
+
+    /* Mobile fix: feature items horizontal padding reduced */
+    .feature-item {
+        padding: 18px 16px;
+        gap: 16px;
+    }
+
+    /* Mobile fix: contact form inputs comfortable on 360px */
+    .contact-form {
+        padding: 20px 16px;
+    }
+
+    /* Mobile fix: btn at full viewport near 360px */
+    .btn {
+        padding: 14px 20px;
+        font-size: 14px;
+        letter-spacing: 2px;
+    }
+
+    /* Mobile fix: footer tagline shrinks to one line */
+    .footer-tagline {
+        font-size: 14px;
+        letter-spacing: 1px;
+    }
+
+    /* Mobile fix: reduce footer top padding on tiny screens */
+    .footer {
+        padding: 48px 0 32px;
+    }
+}
+
+
 .chat-widget {
     position: fixed;
     bottom: 32px;
@@ -997,22 +1228,27 @@ section {
     display: none;
 }
 
-/* Mobile adjustments */
+/* Mobile fix: chat widget adjustments for narrow screens (480px and below) */
 @media (max-width: 480px) {
     .chat-widget {
         bottom: 16px;
         right: 16px;
+        /* Mobile fix: keep widget within viewport at all narrow sizes */
+        max-width: calc(100vw - 32px);
     }
 
     .chat-widget-body {
         width: calc(100vw - 32px);
+        max-width: calc(100vw - 32px); /* Mobile fix: prevent panel from exceeding screen */
     }
 
     .chat-widget-trigger {
-        min-width: unset;
+        min-width: unset; /* Mobile fix: remove min-width that causes overflow */
         padding: 12px 16px;
+        max-width: calc(100vw - 32px);
     }
 
+    /* Mobile fix: hide text label, show icon only for tiny tap target */
     .chat-trigger-text {
         display: none;
     }
