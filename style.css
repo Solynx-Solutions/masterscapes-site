@@ -102,10 +102,12 @@ body {
     width: auto;
     filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
     transition: var(--transition);
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
 }
 
 .header.scrolled .logo {
-    height: 60px;
+    height: 58px;
 }
 
 .nav-menu {
@@ -641,8 +643,11 @@ section {
 }
 
 .footer-logo {
-    height: 100px;
+    height: 115px;
+    width: auto;
     margin-bottom: 25px;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
 }
 
 .footer-tagline {
@@ -771,7 +776,7 @@ section {
     }
 
     .logo {
-        height: 50px;
+        height: 54px;
     }
 }
 
