@@ -168,4 +168,56 @@ document.addEventListener('DOMContentLoaded', () => {
             heroContent.style.opacity = 1 - (scrolled / 700);
         }
     });
+
+    // ── Floating Chat Widget ──────────────────────────────
+    const chatTrigger  = document.getElementById('chatWidgetTrigger');
+    const chatBody     = document.getElementById('chatWidgetBody');
+    const chatClose    = document.getElementById('chatWidgetClose');
+    const chatCTA      = document.getElementById('chatWidgetCTA');
+
+    if (chatTrigger && chatBody) {
+        let isOpen = false;
+
+        function openChat() {
+            isOpen = true;
+            chatBody.classList.add('open');
+            chatTrigger.classList.add('panel-open');
+            chatTrigger.setAttribute('aria-expanded', 'true');
+        }
+
+        function closeChat() {
+            isOpen = false;
+            chatBody.classList.remove('open');
+            chatTrigger.classList.remove('panel-open');
+            chatTrigger.setAttribute('aria-expanded', 'false');
+        }
+
+        chatTrigger.addEventListener('click', () => {
+            if (isOpen) closeChat(); else openChat();
+        });
+
+        if (chatClose) {
+            chatClose.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeChat();
+            });
+        }
+
+        // Close panel after user clicks CTA so they go to the contact section
+        if (chatCTA) {
+            chatCTA.addEventListener('click', () => {
+                setTimeout(closeChat, 300);
+            });
+        }
+
+        // Auto-open after 8 seconds on first visit
+        const hasSeenWidget = sessionStorage.getItem('ms_chat_seen');
+        if (!hasSeenWidget) {
+            setTimeout(() => {
+                openChat();
+                sessionStorage.setItem('ms_chat_seen', '1');
+            }, 8000);
+        }
+    }
 });
+
