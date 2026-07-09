@@ -6,10 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const navMenu = document.querySelector('.nav-menu');
     const header = document.querySelector('.header');
 
-    if (mobileToggle) {
+    if (mobileToggle && navMenu) {
+        mobileToggle.setAttribute('aria-expanded', 'false');
         mobileToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-            mobileToggle.classList.toggle('active');
+            const isOpen = navMenu.classList.toggle('active');
+            mobileToggle.classList.toggle('active', isOpen);
+            mobileToggle.setAttribute('aria-expanded', String(isOpen));
         });
     }
 
@@ -53,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Close mobile menu if open
                 navMenu.classList.remove('active');
                 mobileToggle.classList.remove('active');
+                mobileToggle.setAttribute('aria-expanded', 'false');
             }
         });
     });
