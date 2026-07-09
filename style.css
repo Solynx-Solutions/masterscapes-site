@@ -848,7 +848,9 @@ section {
 
     /* ── Hero ────────────────────────────────────────────────────── */
     .hero {
-        padding-top: 0;
+        /* Mobile fix: restore nav-height offset so fixed navbar doesn't cover hero content */
+        padding-top: var(--nav-height);
+        padding-bottom: 40px;
         /* Mobile fix: disable fixed bg attachment (causes sizing bugs on iOS) */
         background-attachment: scroll;
         min-height: 100svh; /* Mobile fix: use svh for proper iPhone viewport */
