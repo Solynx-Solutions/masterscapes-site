@@ -1,5 +1,24 @@
 // Master Scapes - Interactive JavaScript
 
+/**
+ * revealNumber — call button click handler
+ * Shows the real phone number beneath the vanity button,
+ * then lets the tel: href proceed so mobile dialers activate.
+ */
+function revealNumber(btn, e) {
+    const reveal = btn.nextElementSibling;
+    if (reveal && reveal.classList.contains('call-reveal')) {
+        reveal.classList.add('visible');
+        // On touch devices, allow the tel: link to proceed after a tiny delay
+        // so the user sees the number before the dialer pops
+        if ('ontouchstart' in window) {
+            e.preventDefault();
+            setTimeout(() => { window.location.href = btn.href; }, 400);
+        }
+    }
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     // Mobile Menu Toggle
     const mobileToggle = document.querySelector('.mobile-toggle');
