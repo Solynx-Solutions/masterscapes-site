@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Connect with the Master Scapes sales team to discuss your landscaping, outdoor-living or construction project.">
+    <meta property="og:title" content="Contact Master Scapes Sales | Master Scapes">
+    <meta property="og:description"
+        content="Connect with the Master Scapes sales team to discuss your landscaping, outdoor-living or construction project.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://masterscapes.pro/sales">
+    <title>Contact Master Scapes Sales | Master Scapes</title>
+    <link rel="canonical" href="https://masterscapes.pro/sales">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        .sales-page {
+            background: var(--primary-dark);
+        }
+
+        .sales-page main {
+            overflow: hidden;
+        }
+
+        .sales-hero {
+            padding: calc(var(--nav-height) + 72px) 0 64px;
+            background:
+                radial-gradient(circle at top, rgba(197, 160, 89, 0.12), transparent 48%),
+                var(--primary-dark);
+            text-align: center;
+        }
+
+        .sales-hero-inner {
+            width: 100%;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .sales-eyebrow {
+            margin-bottom: 18px;
+            color: var(--accent-gold);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .sales-hero h1 {
+            margin-bottom: 22px;
+            color: var(--text-light);
+            font-size: clamp(40px, 7vw, 72px);
+            font-weight: 700;
+            letter-spacing: 2px;
+            line-height: 1.06;
+            text-transform: uppercase;
+        }
+
+        .sales-hero-copy {
+            max-width: 680px;
+            margin: 0 auto;
+            color: var(--text-gray);
+            font-size: clamp(18px, 2.2vw, 22px);
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .sales-content {
+            padding: 0 0 88px;
+            background: var(--secondary-dark);
+        }
+
+        .sales-content .container {
+            padding-top: 72px;
+        }
+
+        .sales-stack {
+            width: 100%;
+            max-width: 880px;
+            margin: 0 auto;
+        }
+
+        .sales-chat-card {
+            min-width: 0;
+            padding: 32px;
+            overflow: visible;
+            border: 1px solid var(--glass-border);
+            border-radius: 4px;
+            background: var(--primary-dark);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .sales-chat-card h2 {
+            margin-bottom: 26px;
+            color: var(--text-light);
+            font-size: clamp(24px, 3vw, 34px);
+            font-weight: 600;
+            letter-spacing: 2px;
+            line-height: 1.3;
+            text-transform: uppercase;
+        }
+
+        .sales-widget-host {
+            width: 100%;
+            min-width: 0;
+            overflow: visible;
+        }
+
+        .sales-disclosure {
+            margin: 24px 0 0;
+            color: var(--text-gray);
+            font-size: 15px;
+            font-weight: 300;
+            line-height: 1.75;
+        }
+
+        .sales-disclosure a,
+        .sales-contact a,
+        .sales-legal-links a {
+            color: var(--accent-gold);
+            text-decoration: underline;
+            text-decoration-thickness: 1px;
+            text-underline-offset: 4px;
+            overflow-wrap: anywhere;
+        }
+
+        .sales-disclosure a:hover,
+        .sales-contact a:hover,
+        .sales-legal-links a:hover {
+            color: var(--text-light);
+        }
+
+        .sales-disclosure a:focus-visible,
+        .sales-contact a:focus-visible,
+        .sales-legal-links a:focus-visible {
+            outline: 3px solid var(--accent-gold);
+            outline-offset: 4px;
+            border-radius: 2px;
+        }
+
+        .sales-contact {
+            margin-top: 56px;
+            padding: 32px;
+            border: 1px solid var(--glass-border);
+            border-left: 3px solid var(--accent-gold);
+            border-radius: 4px;
+            background: var(--primary-dark);
+        }
+
+        .sales-contact h2 {
+            margin-bottom: 10px;
+            color: var(--text-light);
+            font-size: clamp(24px, 3vw, 34px);
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .sales-contact-name {
+            margin-bottom: 22px;
+            color: var(--text-gray);
+            font-size: 17px;
+            font-weight: 300;
+        }
+
+        .sales-contact-list {
+            display: grid;
+            gap: 12px;
+            list-style: none;
+        }
+
+        .sales-contact-list a,
+        .sales-legal-links a {
+            display: inline-flex;
+            min-height: 44px;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        .sales-legal-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 28px;
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        @media (max-width: 768px) {
+            .sales-hero {
+                padding: calc(var(--nav-height) + 48px) 0 44px;
+            }
+
+            .sales-content {
+                padding-bottom: 56px;
+            }
+
+            .sales-content .container {
+                padding-top: 44px;
+            }
+
+            .sales-chat-card,
+            .sales-contact {
+                padding: 20px;
+            }
+
+            .sales-contact {
+                margin-top: 40px;
+            }
+
+            .sales-legal-links {
+                gap: 4px 20px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .sales-hero h1 {
+                font-size: 38px;
+                letter-spacing: 1px;
+            }
+
+            .sales-eyebrow {
+                letter-spacing: 3px;
+            }
+
+            .sales-chat-card,
+            .sales-contact {
+                padding: 20px 16px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .sales-page *,
+            .sales-page *::before,
+            .sales-page *::after {
+                scroll-behavior: auto !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            .sales-page .logo {
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="sales-page">
+    <div class="scroll-progress"></div>
+
+    <header class="header">
+        <nav class="navbar" aria-label="Primary navigation">
+            <div class="container">
+                <div class="nav-brand">
+                    <a href="/" aria-label="Master Scapes home">
+                        <img src="/images/masterscapes-logo.svg" alt="Master Scapes Luxury Hardscape Contractor"
+                            class="logo">
+                    </a>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="/#home" class="nav-link">Home</a></li>
+                    <li><a href="/#services" class="nav-link">Services</a></li>
+                    <li><a href="/#about" class="nav-link">About</a></li>
+                    <li><a href="/#gallery" class="nav-link">Gallery</a></li>
+                    <li><a href="/projects.html" class="nav-link">Projects</a></li>
+                    <li><a href="/careers.html" class="nav-link">Careers</a></li>
+                    <li><a href="/#contact" class="nav-link">Contact</a></li>
+                </ul>
+                <button class="mobile-toggle" type="button" aria-label="Toggle menu" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <section class="sales-hero" aria-labelledby="sales-heading">
+            <div class="container">
+                <div class="sales-hero-inner">
+                    <p class="sales-eyebrow">Master Scapes Sales</p>
+                    <h1 id="sales-heading">Talk With the Master Scapes Sales Team</h1>
+                    <p class="sales-hero-copy">Tell us about your project, ask questions and connect directly with the
+                        Master Scapes sales team.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="sales-content" aria-label="Master Scapes sales chat">
+            <div class="container">
+                <div class="sales-stack">
+                    <div class="sales-chat-card">
+                        <h2>Use the chat below to start the conversation.</h2>
+                        <div class="sales-widget-host">
+                            <div data-chat-widget data-widget-id="6a721ca85a8261fbe4d52c23"
+                                data-location-id="OHMmKtNe9k9yWmOFLLLD"></div><script
+                                src="https://widgets.leadconnectorhq.com/loader.js"
+                                data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js"
+                                data-widget-id="6a721ca85a8261fbe4d52c23" data-source="WEB_USER"></script>
+                        </div>
+                        <p class="sales-disclosure">By submitting your information through the chat, you agree to the
+                            applicable <a href="/privacy.html">Privacy Policy</a> and <a href="/terms.html">Terms</a> and
+                            consent to receive communications related to your inquiry. Message and data rates may apply.
+                            Reply STOP to unsubscribe.</p>
+                    </div>
+
+                    <section class="sales-contact" aria-labelledby="sales-contact-heading">
+                        <h2 id="sales-contact-heading">Business Contact</h2>
+                        <p class="sales-contact-name">Master Scapes</p>
+                        <ul class="sales-contact-list">
+                            <li><a href="tel:+12098857238" aria-label="Call Master Scapes at 209-885-7238">209-885-7238</a>
+                            </li>
+                            <li><a href="mailto:info@masterscapes.pro">info@masterscapes.pro</a></li>
+                        </ul>
+                        <nav class="sales-legal-links" aria-label="Legal information">
+                            <a href="/privacy.html">Privacy Policy</a>
+                            <a href="/terms.html">Terms</a>
+                        </nav>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="/images/masterscapes-logo.svg" alt="Master Scapes Luxury Hardscape Contractor"
+                        class="footer-logo">
+                    <p class="footer-tagline">Pinnacle of Craftsmanship</p>
+                </div>
+                <div class="footer-info">
+                    <p>&copy; 2025 Master Scapes. All Rights Reserved.</p>
+                    <p>Licensed | Bonded | Insured</p>
+                    <p style="font-size:13px; color:#555; margin-top:10px; font-weight:300; letter-spacing:1px;">Master
+                        Scapes is a flagship brand of Lifestyle Landscape Design &amp; Construction Inc.</p>
+                    <img src="/images/lifestyle-logo.png" alt="Lifestyle Landscape Design" class="lifestyle-logo">
+                    <p style="margin-top: 15px;">
+                        <a href="/privacy.html"
+                            style="color: var(--accent-gold); text-decoration: none; margin-right: 20px;">Privacy
+                            Policy</a>
+                        <a href="/terms.html"
+                            style="color: var(--accent-gold); text-decoration: none; margin-right: 20px;">Terms of
+                            Service</a>
+                        <a href="/careers.html" style="color: var(--accent-gold); text-decoration: none;">Subcontractor
+                            Opportunities</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/script.js"></script>
+</body>
+
+</html>
