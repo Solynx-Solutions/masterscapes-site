@@ -312,26 +312,22 @@
                     <a href="tel:+12098857238">209-885-7238</a>
                     <p style="margin-top:15px; font-size:14px;">Mon–Fri: 8am–5pm &nbsp;|&nbsp; Sat: By Appointment</p>
                 </div>
-                <form class="contact-form" id="lpFormModesto" method="POST" style="margin-top:40px;">
-                    <h3>Request a Consultation</h3>
-                    <input type="text" name="name" placeholder="Your Name *" required>
-                    <input type="email" name="email" placeholder="Your Email *" required>
-                    <input type="tel" name="phone" placeholder="Your Phone *" required>
-                    <input type="hidden" name="city" value="Modesto">
-                    <select name="service" required>
-                        <option value="">Service Interested In *</option>
-                        <option value="pavers">Premium Pavers</option>
-                        <option value="pool">Pool Deck &amp; Coping</option>
-                        <option value="outdoor">Outdoor Living</option>
-                        <option value="walls">Retaining Walls</option>
-                        <option value="landscape">Landscape Design</option>
-                    </select>
-                    <textarea name="message" placeholder="Project Details *" rows="4" required></textarea>
-                    <button type="submit" class="btn btn-primary">Request Free Estimate</button>
-                    <div class="form-response"
-                        style="display:none; margin-top:20px; padding:20px; text-align:center; border-radius:5px;">
-                    </div>
-                </form>
+                <section class="contact-form" aria-labelledby="modesto-consultation-heading"
+                    data-delivery-state="secure-channel-required" style="margin-top:40px;">
+                    <h3 id="modesto-consultation-heading">Request a Consultation</h3>
+                    <p style="color:rgba(255,255,255,0.75); font-size:15px; line-height:1.7; margin-bottom:24px;">
+                        To protect your project information, online requests are accepted only through a verified
+                        delivery channel. Start a secure project conversation with the sales team or call us directly.
+                    </p>
+                    <a href="/sales" class="btn btn-primary" style="display:block; text-align:center;">
+                        Start a Project Conversation
+                    </a>
+                    <a href="tel:+12098857238" class="btn btn-secondary"
+                        style="display:block; text-align:center; margin-top:14px;">Call Master Scapes</a>
+                    <p style="font-size:12px; color:rgba(255,255,255,0.58); margin-top:18px; line-height:1.6;">
+                        No information is collected on this page unless verified delivery is available.
+                    </p>
+                </section>
             </div>
         </div>
     </section>
@@ -360,30 +356,6 @@
         </div>
     </footer>
     <script src="script.js"></script>
-    <script>
-        const lpForm = document.getElementById('lpFormModesto');
-        if (lpForm) {
-            lpForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const btn = lpForm.querySelector('button[type="submit"]');
-                const resp = lpForm.querySelector('.form-response');
-                const data = Object.fromEntries(new FormData(lpForm));
-                btn.disabled = true; btn.textContent = 'Sending...';
-                try {
-                    const WEBHOOK_URL = 'https://services.leadconnectorhq.com/hooks/WEBHOOKID';
-                    if (!WEBHOOK_URL.includes('WEBHOOKID')) {
-                        await fetch(WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...data, source: 'Master Scapes - Modesto', timestamp: new Date().toISOString() }) });
-                    } else { await new Promise(r => setTimeout(r, 1000)); }
-                    resp.style.cssText = 'display:block; background:rgba(197,160,89,0.1); color:#c5a059; border:1px solid #c5a059;';
-                    resp.innerHTML = '<strong>Thank you.</strong> A project specialist will contact you shortly.';
-                    lpForm.reset();
-                } catch (err) {
-                    resp.style.cssText = 'display:block; background:rgba(255,68,68,0.1); color:#ff4444; border:1px solid #ff4444;';
-                    resp.innerHTML = '<strong>Something went wrong.</strong> Please call us at 209-885-7238.';
-                } finally { btn.disabled = false; btn.textContent = 'Request Free Estimate'; }
-            });
-        }
-    </script>
 </body>
 
 </html>
