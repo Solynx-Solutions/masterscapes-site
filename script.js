@@ -125,62 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     revealElements.forEach(el => revealObserver.observe(el));
 
-    // Form Submission Handling
-    const masterScapesForm = document.getElementById('masterScapesForm');
-
-    if (masterScapesForm) {
-        masterScapesForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const submitBtn = masterScapesForm.querySelector('button[type="submit"]');
-            const responseDiv = masterScapesForm.querySelector('.form-response');
-            const formData = new FormData(masterScapesForm);
-            const data = Object.fromEntries(formData);
-
-            // Replace with actual GoHighLevel / Zapier webhook
-            const WEBHOOK_URL = 'https://services.leadconnectorhq.com/hooks/WEBHOOKID';
-
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Sending...';
-
-            try {
-                // If no actual URL is set, simulate success for visual demonstration
-                if (WEBHOOK_URL.includes('WEBHOOKID')) {
-                    await new Promise(resolve => setTimeout(resolve, 1500));
-                } else {
-                    const response = await fetch(WEBHOOK_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            ...data,
-                            source: 'Master Scapes Website',
-                            timestamp: new Date().toISOString()
-                        })
-                    });
-                    if (!response.ok) throw new Error('Submission failed');
-                }
-
-                responseDiv.style.display = 'block';
-                responseDiv.style.background = 'rgba(197, 160, 89, 0.1)';
-                responseDiv.style.color = '#c5a059';
-                responseDiv.style.border = '1px solid #c5a059';
-                responseDiv.innerHTML = '<strong>Thank you.</strong> A project specialist will contact you shortly.';
-
-                masterScapesForm.reset();
-            } catch (error) {
-                console.error('Form Error:', error);
-                responseDiv.style.display = 'block';
-                responseDiv.style.background = 'rgba(255, 68, 68, 0.1)';
-                responseDiv.style.color = '#ff4444';
-                responseDiv.style.border = '1px solid #ff4444';
-                responseDiv.innerHTML = '<strong>Something went wrong.</strong> Please try again or call us directly.';
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Request Consultation';
-            }
-        });
-    }
-
     // Hero Parallax
     window.addEventListener('scroll', () => {
         const scrolled = window.pageYOffset;
@@ -242,4 +186,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
-
