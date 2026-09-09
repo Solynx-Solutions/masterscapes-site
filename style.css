@@ -115,69 +115,79 @@ body {
 .nav-brand {
     display: flex;
     align-items: center;
+    gap: 13px;
     position: relative;
     isolation: isolate;
     flex-shrink: 0;
+    min-height: 66px;
+    padding: 7px 16px 7px 9px;
+    border: 1px solid rgba(197, 160, 89, 0.24);
+    border-left-color: rgba(197, 160, 89, 0.78);
+    background: linear-gradient(105deg, rgba(5, 10, 13, 0.94), rgba(8, 15, 18, 0.74));
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.22);
+    color: var(--text-light);
+    text-decoration: none;
+    transition: border-color 240ms ease, background 240ms ease, transform 240ms ease;
 }
 
-.nav-brand::before {
+.nav-brand:hover {
+    border-color: rgba(197, 160, 89, 0.52);
+    background: linear-gradient(105deg, rgba(6, 12, 15, 0.98), rgba(12, 20, 23, 0.86));
+    transform: translateY(-1px);
+}
+
+.nav-emblem {
+    width: 53px;
+    height: 51px;
+    flex: 0 0 53px;
+    overflow: hidden;
+    position: relative;
+}
+
+.nav-emblem::after {
     content: '';
     position: absolute;
-    inset: 4px -2px;
-    z-index: -1;
-    border: 1px solid rgba(197, 160, 89, 0.68);
+    inset: 1px;
+    border: 1px solid rgba(197, 160, 89, 0.38);
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 28%, rgba(55, 65, 69, 0.96), rgba(7, 13, 18, 0.98) 68%);
-    box-shadow:
-        0 6px 16px rgba(0, 0, 0, 0.42),
-        0 0 0 1px rgba(255, 255, 255, 0.06) inset,
-        0 0 14px rgba(197, 160, 89, 0.18);
-    opacity: 0.94;
-    animation: logoBackdropPulse 5.5s ease-in-out infinite;
+    pointer-events: none;
 }
 
 .logo {
-    content: url('images/masterscapes-logo.png');
-    height: 66px;
-    width: auto;
-    background: transparent;
-    filter: drop-shadow(0 5px 14px rgba(0, 0, 0, 0.58));
-    animation: logoReveal 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    width: 56px;
+    height: auto;
+    max-width: none;
     display: block;
-    transform-origin: center;
-    transition: filter 300ms ease, transform 300ms ease;
+    transform: translate(-1px, -1px);
+    filter: invert(1) sepia(1) saturate(0.8) brightness(1.45) contrast(1.2);
+    mix-blend-mode: screen;
+    opacity: 0.92;
+    transition: opacity 240ms ease;
 }
 
-.logo:hover {
-    filter:
-        drop-shadow(0 0 13px rgba(197, 160, 89, 0.45))
-        drop-shadow(0 6px 16px rgba(0, 0, 0, 0.56));
-    transform: translateY(-1px) scale(1.025);
+.nav-brand:hover .logo {
+    opacity: 1;
 }
 
-.header.scrolled .logo {
-    height: 52px;
+.nav-wordmark {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    white-space: nowrap;
 }
 
-/* Premium motion stays in the backing so the brand mark remains crisp and calm. */
-@keyframes logoReveal {
-    from { opacity: 0; transform: translateY(-4px) scale(0.97); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+.nav-wordmark strong {
+    color: #f5f0e7;
+    font: 600 19px/1 'Cormorant Garamond', Georgia, serif;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 }
 
-@keyframes logoBackdropPulse {
-    0%, 100% {
-        box-shadow:
-            0 6px 16px rgba(0, 0, 0, 0.42),
-            0 0 0 1px rgba(255, 255, 255, 0.06) inset,
-            0 0 12px rgba(197, 160, 89, 0.14);
-    }
-    50% {
-        box-shadow:
-            0 7px 18px rgba(0, 0, 0, 0.46),
-            0 0 0 1px rgba(255, 255, 255, 0.08) inset,
-            0 0 20px rgba(197, 160, 89, 0.3);
-    }
+.nav-wordmark small {
+    color: rgba(197, 160, 89, 0.82);
+    font: 600 7px/1.2 'Manrope', sans-serif;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
 }
 
 
@@ -337,10 +347,6 @@ body {
         display: none;
     }
 
-    .logo,
-    .nav-brand::before {
-        animation: none;
-    }
 }
 
 .hero-kicker {
@@ -1049,6 +1055,15 @@ section {
 /* ── Responsive Breakpoints ─────────────────────────────────────── */
 
 @media (max-width: 1200px) {
+    .nav-menu {
+        gap: 24px;
+    }
+
+    .nav-link {
+        font-size: 14px;
+        letter-spacing: 1.5px;
+    }
+
     .about-grid,
     .contact-grid {
         gap: 60px;
@@ -1056,6 +1071,27 @@ section {
 }
 
 @media (max-width: 1024px) {
+    .nav-wordmark small {
+        display: none;
+    }
+
+    .nav-brand {
+        padding-right: 12px;
+    }
+
+    .nav-wordmark strong {
+        font-size: 16px;
+    }
+
+    .nav-menu {
+        gap: 16px;
+    }
+
+    .nav-link {
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+
     .about-grid,
     .contact-grid {
         grid-template-columns: 1fr;
@@ -1131,10 +1167,29 @@ section {
         transform: translateY(-8px) rotate(-45deg);
     }
 
-    /* Mobile fix: logo constrained so it never pushes hamburger off-screen */
+    .nav-brand {
+        min-height: 58px;
+        gap: 10px;
+        padding: 5px 12px 5px 7px;
+    }
+
+    .nav-emblem {
+        width: 47px;
+        height: 45px;
+        flex-basis: 47px;
+    }
+
     .logo {
-        height: 54px;
-        max-width: calc(100vw - 100px); /* Leave room for hamburger button */
+        width: 50px;
+    }
+
+    .nav-wordmark small {
+        display: block;
+        font-size: 6px;
+    }
+
+    .nav-wordmark strong {
+        font-size: 16px;
     }
 
     /* ── Hero ────────────────────────────────────────────────────── */
