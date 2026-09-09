@@ -125,15 +125,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     revealElements.forEach(el => revealObserver.observe(el));
 
-    // Hero Parallax
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        const heroContent = document.querySelector('.hero-content');
-        if (heroContent) {
-            heroContent.style.transform = `translateY(${scrolled * 0.3}px)`;
-            heroContent.style.opacity = 1 - (scrolled / 700);
-        }
-    });
+    // Keep the complete hero offer anchored inside the hero while scrolling.
+    // Moving this block with page scroll previously pushed the phone CTA into
+    // the services section and made it fade before the hero left the viewport.
 
     // ── Floating Chat Widget ──────────────────────────────
     const chatTrigger  = document.getElementById('chatWidgetTrigger');

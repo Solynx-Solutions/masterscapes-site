@@ -220,6 +220,48 @@
             color: var(--text-light);
         }
 
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .form-field label {
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+        }
+
+        .form-intro {
+            max-width: 720px;
+            margin: -25px 0 34px;
+            color: var(--text-gray);
+            font-size: 16px;
+            font-weight: 300;
+            line-height: 1.75;
+        }
+
+        .form-security {
+            margin: 0 0 28px;
+            padding: 15px 18px;
+            border-left: 2px solid var(--accent-gold);
+            background: rgba(197, 160, 89, 0.07);
+            color: rgba(255, 255, 255, 0.62);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .form-honeypot {
+            position: absolute !important;
+            width: 1px !important;
+            height: 1px !important;
+            overflow: hidden !important;
+            clip: rect(0, 0, 0, 0) !important;
+            white-space: nowrap !important;
+        }
+
         .careers-form input:focus,
         .careers-form select:focus,
         .careers-form textarea:focus {
@@ -333,6 +375,22 @@
             border-radius: 4px;
         }
 
+        .form-response.is-visible {
+            display: block;
+        }
+
+        .form-response.is-success {
+            border: 1px solid rgba(125, 184, 120, 0.45);
+            background: rgba(125, 184, 120, 0.1);
+            color: #d9f0d7;
+        }
+
+        .form-response.is-error {
+            border: 1px solid rgba(197, 160, 89, 0.5);
+            background: rgba(197, 160, 89, 0.08);
+            color: #f2e7cf;
+        }
+
         /* ── Stats Row ── */
         .careers-stats {
             display: flex;
@@ -404,9 +462,18 @@
     <header class="header scrolled">
         <nav class="navbar">
             <div class="container">
-                <div class="nav-brand">
-                    <a href="index.html">
-                        <img src="images/masterscapes-logo.svg" alt="Master Scapes Luxury Hardscape Contractor" class="logo">
+                <div class="nav-identity">
+                    <a class="nav-brand" href="index.html" aria-label="Master Scapes home">
+                        <span class="nav-emblem" aria-hidden="true">
+                            <img src="images/masterscapes-logo.png" alt="" class="logo">
+                        </span>
+                        <span class="nav-wordmark">
+                            <strong>Master Scapes</strong>
+                            <small>Outdoor Living &middot; Central California</small>
+                        </span>
+                    </a>
+                    <a class="nav-sales-contact" href="tel:+12098857098" aria-label="Call Master Scapes Sales at 209-885-7098">
+                        <span>Sales</span><strong>209-885-7098</strong>
                     </a>
                 </div>
                 <ul class="nav-menu">
@@ -502,15 +569,136 @@
     <section class="careers-section" id="apply">
         <div class="container">
             <div class="careers-form-wrap">
-                <h2>What To Submit</h2>
+                <h2>Start A Partnership</h2>
                 <span class="form-accent">Subcontractor Application</span>
+                <p class="form-intro">Tell us what your crew does best. This first step is intentionally short; licenses, insurance documents, and project files are requested securely only if Master Scapes advances the conversation.</p>
+                <p class="form-security">Secure intake: when activated, your application will be sent to the private Master Scapes workspace inside the SOLYNX Platform. It stays separate from homeowner leads and marketing campaigns.</p>
 
-                <div class="careers-form" role="status" data-delivery-state="secure-channel-required">
-                    <p style="color:rgba(255,255,255,0.75); font-size:16px; line-height:1.8; margin-bottom:0;">
-                        Online applications are temporarily unavailable while secure submission delivery is being
-                        verified. No application information is collected on this page until that connection is ready.
-                    </p>
-                </div>
+                <form class="careers-form" id="contractorApplicationForm" data-delivery-state="controlled" novalidate>
+                    <div class="form-grid-2">
+                        <div class="form-field">
+                            <label for="appName">Full name *</label>
+                            <input type="text" name="name" autocomplete="name" required maxlength="120" id="appName">
+                        </div>
+                        <div class="form-field">
+                            <label for="appBusiness">Business or crew name *</label>
+                            <input type="text" name="businessName" autocomplete="organization" required maxlength="140" id="appBusiness">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-field">
+                            <label for="appPhone">Best phone number *</label>
+                            <input type="tel" name="phone" autocomplete="tel" required maxlength="40" id="appPhone">
+                        </div>
+                        <div class="form-field">
+                            <label for="appEmail">Email address *</label>
+                            <input type="email" name="email" autocomplete="email" required maxlength="254" id="appEmail">
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-field">
+                            <label for="appTrade">Primary trade *</label>
+                            <select name="trade" required id="appTrade">
+                                <option value="">Select a specialty</option>
+                                <option value="hardscape-pavers">Hardscapes &amp; Pavers</option>
+                                <option value="outdoor-living">Outdoor Living Structures</option>
+                                <option value="retaining-walls">Retaining Walls</option>
+                                <option value="landscape-construction">Landscape Construction</option>
+                                <option value="demo-grading">Demo &amp; Grading</option>
+                                <option value="irrigation">Irrigation Systems</option>
+                                <option value="lighting">Landscape Lighting</option>
+                                <option value="pool-deck">Pool Deck Work</option>
+                                <option value="concrete-stone">Concrete &amp; Stonework</option>
+                                <option value="multiple">Multiple Trades</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="appExperience">Experience *</label>
+                            <select name="experience" required id="appExperience">
+                                <option value="">Select experience</option>
+                                <option value="1-2">1–2 years</option>
+                                <option value="3-5">3–5 years</option>
+                                <option value="6-10">6–10 years</option>
+                                <option value="10-plus">10+ years</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-field">
+                            <label for="appServiceArea">Primary service area *</label>
+                            <input type="text" name="serviceArea" autocomplete="address-level2" required maxlength="120" id="appServiceArea">
+                        </div>
+                        <div class="form-field">
+                            <label for="appCrewSize">Available crew size *</label>
+                            <select name="crewSize" required id="appCrewSize">
+                                <option value="">Select crew size</option>
+                                <option value="solo">Owner / solo operator</option>
+                                <option value="2-4">2–4 people</option>
+                                <option value="5-9">5–9 people</option>
+                                <option value="10-plus">10+ people</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-field">
+                            <label for="appLicense">License status *</label>
+                            <select name="licenseStatus" required id="appLicense">
+                                <option value="">Select license status</option>
+                                <option value="active">Active contractor license</option>
+                                <option value="not-required">Not required for my trade</option>
+                                <option value="in-progress">Application in progress</option>
+                                <option value="none">Not currently licensed</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="appInsurance">Insurance status *</label>
+                            <select name="insuranceStatus" required id="appInsurance">
+                                <option value="">Select insurance status</option>
+                                <option value="fully-insured">General liability &amp; workers' compensation</option>
+                                <option value="general-liability">General liability only</option>
+                                <option value="in-progress">Coverage in progress</option>
+                                <option value="none">Not currently insured</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="appAvailability">Current availability *</label>
+                        <select name="availability" required id="appAvailability">
+                            <option value="">Select availability</option>
+                            <option value="immediate">Available now</option>
+                            <option value="within-30-days">Within 30 days</option>
+                            <option value="within-60-days">Within 60 days</option>
+                            <option value="future">Future projects only</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="appMessage">Experience and project fit *</label>
+                        <textarea name="message" rows="6" required maxlength="2000" id="appMessage" placeholder="Briefly describe your strongest work, typical project size, and what makes your crew dependable."></textarea>
+                    </div>
+
+                    <div class="form-honeypot" aria-hidden="true">
+                        <label for="appWebsite">Leave this field blank</label>
+                        <input type="text" name="website" id="appWebsite" tabindex="-1" autocomplete="off">
+                    </div>
+
+                    <div class="form-consent">
+                        <label>
+                            <input type="checkbox" name="consent" id="contractorConsent" required>
+                            <span>I agree that Master Scapes may contact me by phone or email about this subcontractor application. *</span>
+                        </label>
+                        <p class="form-consent-note">This application does not enroll you in marketing or text messages. Do not enter Social Security, banking, identity-document, or payment information.</p>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="appSubmitBtn">Submit Secure Application</button>
+                    <div class="form-response" id="appFormResponse" role="status" aria-live="polite"></div>
+                </form>
             </div>
         </div>
     </section>
@@ -550,6 +738,53 @@
             toggle.addEventListener('click', () => {
                 toggle.classList.toggle('active');
                 navMenu.classList.toggle('active');
+            });
+        }
+
+        const contractorForm = document.getElementById('contractorApplicationForm');
+        if (contractorForm) {
+            const submitButton = document.getElementById('appSubmitBtn');
+            const responseBox = document.getElementById('appFormResponse');
+            const submissionId = crypto.randomUUID
+                ? crypto.randomUUID()
+                : `ms-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+
+            const showResponse = (message, kind) => {
+                responseBox.textContent = message;
+                responseBox.className = `form-response is-visible is-${kind}`;
+            };
+
+            contractorForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                responseBox.className = 'form-response';
+                if (!contractorForm.reportValidity()) return;
+
+                const data = new FormData(contractorForm);
+                const payload = Object.fromEntries(data.entries());
+                payload.consent = data.get('consent') === 'on';
+                payload.submissionId = submissionId;
+                payload.source = 'masterscapes-careers';
+                payload.sourcePage = window.location.pathname;
+
+                submitButton.disabled = true;
+                submitButton.textContent = 'Sending securely…';
+                try {
+                    const response = await fetch('/api/subcontractor-interest', {
+                        method: 'POST',
+                        headers: { 'content-type': 'application/json' },
+                        body: JSON.stringify(payload),
+                    });
+                    const result = await response.json().catch(() => ({}));
+                    if (!response.ok || result.accepted !== true) throw new Error(result.code || 'not_accepted');
+
+                    contractorForm.reset();
+                    showResponse('Application received. Master Scapes will review your information and contact qualified partners directly.', 'success');
+                } catch {
+                    showResponse('Your information was not saved. The secure application connection is being finalized. Please call Sales at 209-885-7098 for immediate assistance.', 'error');
+                } finally {
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Submit Secure Application';
+                }
             });
         }
     </script>
