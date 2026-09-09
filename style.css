@@ -115,59 +115,56 @@ body {
 .nav-brand {
     display: flex;
     align-items: center;
+    position: relative;
+    isolation: isolate;
+    flex-shrink: 0;
+}
+
+.nav-brand::before {
+    content: '';
+    position: absolute;
+    inset: 14% 10%;
+    z-index: -1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(197, 160, 89, 0.28) 0%, rgba(197, 160, 89, 0.08) 46%, transparent 72%);
+    filter: blur(10px);
+    opacity: 0.45;
+    transform: scale(0.92);
+    animation: logoAura 5.5s ease-in-out infinite;
 }
 
 .logo {
+    content: url('images/masterscapes-logo.png');
     height: 76px;
     width: auto;
-    filter: brightness(1.08) contrast(1.05) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
-    /* Luxury stamp animation — runs once on load, then gentle glow pulse */
-    animation: masterStamp 3.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards,
-               logoGlow 4s ease-in-out 3.5s infinite;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
+    background: transparent;
+    filter: drop-shadow(0 5px 14px rgba(0, 0, 0, 0.58));
+    animation: logoReveal 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
     display: block;
-    transform-origin: center top; /* drops from above like a stamp */
+    transform-origin: center;
+    transition: filter 300ms ease, transform 300ms ease;
 }
 
 .logo:hover {
-    /* Pause the glow loop on hover, lift with gold shimmer */
-    animation-play-state: paused;
     filter:
-        brightness(1.25)
-        contrast(1.1)
-        drop-shadow(0 0 16px rgba(197, 160, 89, 0.7))
-        drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
-    transform: scale(1.05) translateY(-2px);
-    transition: filter 0.3s ease, transform 0.3s ease;
+        drop-shadow(0 0 13px rgba(197, 160, 89, 0.45))
+        drop-shadow(0 6px 16px rgba(0, 0, 0, 0.56));
+    transform: translateY(-1px) scale(1.025);
 }
 
 .header.scrolled .logo {
     height: 56px;
 }
 
-/* ── Logo animations ─────────────────────────────────────────────
-   masterStamp: precision tool set into stone — heavy, authoritative
-   logoGlow:    subtle ongoing gold pulse after stamp settles
-──────────────────────────────────────────────────────────────── */
-@keyframes masterStamp {
-    0%   { transform: scale(1.18) translateY(-8px); opacity: 0;
-           filter: brightness(1.4) drop-shadow(0 0 0px rgba(197,160,89,0)); }
-    /* Strike down */
-    30%  { transform: scale(0.96) translateY(3px); opacity: 1;
-           filter: brightness(1.1) drop-shadow(0 6px 18px rgba(197,160,89,0.6)); }
-    /* Micro-vibration — material absorbing impact */
-    40%  { transform: scale(1.01) translateY(-1px); }
-    50%  { transform: scale(0.99) translateY(1px); }
-    60%  { transform: scale(1.005) translateY(-0.5px); }
-    /* Settle */
-    100% { transform: scale(1) translateY(0); opacity: 1;
-           filter: brightness(1.08) contrast(1.05) drop-shadow(0 2px 8px rgba(0,0,0,0.6)); }
+/* Premium motion stays in the halo so the brand mark remains crisp and calm. */
+@keyframes logoReveal {
+    from { opacity: 0; transform: translateY(-4px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-@keyframes logoGlow {
-    0%, 100% { filter: brightness(1.08) contrast(1.05) drop-shadow(0 2px 8px rgba(0,0,0,0.6)); }
-    50%      { filter: brightness(1.14) contrast(1.06) drop-shadow(0 2px 14px rgba(197,160,89,0.35)); }
+@keyframes logoAura {
+    0%, 100% { opacity: 0.34; transform: scale(0.92); }
+    50% { opacity: 0.64; transform: scale(1.08); }
 }
 
 
@@ -300,6 +297,11 @@ body {
 @media (prefers-reduced-motion: reduce) {
     .hero-video {
         display: none;
+    }
+
+    .logo,
+    .nav-brand::before {
+        animation: none;
     }
 }
 
