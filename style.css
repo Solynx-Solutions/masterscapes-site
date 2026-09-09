@@ -112,6 +112,11 @@ body {
     height: var(--nav-height);
 }
 
+.nav-identity {
+    position: relative;
+    flex-shrink: 0;
+}
+
 .nav-brand {
     display: flex;
     align-items: center;
@@ -120,7 +125,7 @@ body {
     isolation: isolate;
     flex-shrink: 0;
     min-height: 66px;
-    padding: 7px 16px 7px 9px;
+    padding: 7px 16px 19px 9px;
     border: 1px solid rgba(197, 160, 89, 0.24);
     border-left-color: rgba(197, 160, 89, 0.78);
     background: linear-gradient(105deg, rgba(5, 10, 13, 0.94), rgba(8, 15, 18, 0.74));
@@ -128,6 +133,33 @@ body {
     color: var(--text-light);
     text-decoration: none;
     transition: border-color 240ms ease, background 240ms ease, transform 240ms ease;
+}
+
+.nav-sales-contact {
+    position: absolute;
+    left: 75px;
+    bottom: 7px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    color: rgba(255, 255, 255, 0.58);
+    font: 600 7px/1 'Manrope', sans-serif;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 200ms ease;
+}
+
+.nav-sales-contact strong {
+    color: rgba(197, 160, 89, 0.96);
+    font: inherit;
+    letter-spacing: 0.08em;
+}
+
+.nav-sales-contact:hover,
+.nav-sales-contact:focus-visible {
+    color: #fff;
 }
 
 .nav-brand:hover {
@@ -1181,9 +1213,9 @@ section {
     }
 
     .nav-brand {
-        min-height: 58px;
+        min-height: 64px;
         gap: 10px;
-        padding: 5px 12px 5px 7px;
+        padding: 5px 12px 18px 7px;
     }
 
     .nav-emblem {
@@ -1203,6 +1235,13 @@ section {
 
     .nav-wordmark strong {
         font-size: 16px;
+    }
+
+    .nav-sales-contact {
+        left: 64px;
+        bottom: 6px;
+        font-size: 6px;
+        gap: 4px;
     }
 
     /* ── Hero ────────────────────────────────────────────────────── */

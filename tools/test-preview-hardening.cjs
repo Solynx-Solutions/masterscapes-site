@@ -62,11 +62,12 @@ for (const route of publicRoutes) {
   const html = read(route);
   check(/<title>[^<]+<\/title>/i.test(html), `${route} has a page title`);
   check(/<h1(?:\s|>)/i.test(html), `${route} has a primary heading`);
+  check(/class=["']nav-identity["']/i.test(html), `${route} retains the premium navigation identity`);
+  check(/class=["']nav-sales-contact["'][^>]+href=["']tel:\+12098857098["']/i.test(html), `${route} exposes the verified dedicated sales line`);
 }
 
 const failClosedRoutes = [
   'index.html',
-  'careers.html',
   'pavers-manteca.html',
   'pavers-modesto.html',
   'pavers-turlock.html',
@@ -88,6 +89,15 @@ for (const route of failClosedRoutes) {
   for (const pattern of forbidden) {
     check(!pattern.test(html), `${route} contains no forbidden placeholder`);
   }
+}
+
+const careers = read('careers.html');
+check(/<form[^>]+id=["']contractorApplicationForm["']/i.test(careers), 'careers.html contains the controlled subcontractor application');
+check(!/action=["']?https?:/i.test(careers), 'careers.html exposes no third-party form destination');
+check(/data-delivery-state=["']controlled["']/i.test(careers), 'careers.html marks the controlled delivery state');
+check(/does not enroll you in marketing or text messages/i.test(careers), 'careers.html preserves the narrow contact-consent boundary');
+for (const pattern of forbidden) {
+  check(!pattern.test(careers), 'careers.html contains no forbidden placeholder');
 }
 
 for (const route of [

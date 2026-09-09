@@ -21,7 +21,6 @@ const routes = [
 ];
 const failClosedRoutes = new Set([
   '/',
-  '/careers.html',
   '/pavers-manteca.html',
   '/pavers-modesto.html',
   '/pavers-turlock.html',
@@ -126,6 +125,9 @@ fs.mkdirSync(outputDir, { recursive: true });
             failClosedCount: document.querySelectorAll(
               '[data-delivery-state="secure-channel-required"]',
             ).length,
+            controlledFormCount: document.querySelectorAll(
+              'form[data-delivery-state="controlled"]',
+            ).length,
             salesLinkCount: [...document.querySelectorAll('a[href]')].filter((anchor) => {
               const href = anchor.getAttribute('href') || '';
               return /^(?:\.\/|\/)?sales\/?$/.test(href);
@@ -173,6 +175,11 @@ fs.mkdirSync(outputDir, { recursive: true });
         if (failClosedRoutes.has(route)) {
           if (dom.formCount !== 0) failures.push(`expected 0 forms, found ${dom.formCount}`);
           if (dom.failClosedCount !== 1) failures.push(`expected 1 fail-closed state, found ${dom.failClosedCount}`);
+          if (dom.hasPlaceholder) failures.push('placeholder receiver text found');
+        }
+        if (route === '/careers.html') {
+          if (dom.formCount !== 1) failures.push(`expected 1 controlled form, found ${dom.formCount}`);
+          if (dom.controlledFormCount !== 1) failures.push(`expected 1 controlled delivery form, found ${dom.controlledFormCount}`);
           if (dom.hasPlaceholder) failures.push('placeholder receiver text found');
         }
         if (salesRoutes.has(route) && dom.salesLinkCount < 1) failures.push('sales route missing');
