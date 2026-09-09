@@ -507,6 +507,19 @@ body {
     background: rgba(197, 160, 89, 0.75);
 }
 
+.hero-origin {
+    margin-top: 18px;
+    color: rgba(255, 255, 255, 0.4);
+    font: 500 9px/1.4 'Manrope', sans-serif;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+}
+
+.hero-origin strong {
+    color: rgba(255, 255, 255, 0.66);
+    font-weight: 500;
+}
+
 /* Buttons */
 .btn {
     display: inline-block;
@@ -1370,6 +1383,12 @@ section {
 
     .hero-disciplines span + span::before {
         left: -10px;
+    }
+
+    .hero-origin {
+        margin-top: 14px;
+        font-size: 8px;
+        letter-spacing: 0.1em;
     }
 
     /* Mobile fix: section titles tighter at 360-430px */
