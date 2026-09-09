@@ -319,17 +319,6 @@
             line-height: 1.5;
         }
 
-        /* Webhook placeholder note */
-        .webhook-note {
-            background: rgba(197, 160, 89, 0.05);
-            border: 1px dashed rgba(197, 160, 89, 0.25);
-            padding: 16px 20px;
-            margin-bottom: 30px;
-            font-size: 13px;
-            color: rgba(197, 160, 89, 0.6);
-            letter-spacing: 1px;
-        }
-
         /* Submit full-width button */
         .careers-form .btn {
             width: 100%;
@@ -516,93 +505,12 @@
                 <h2>What To Submit</h2>
                 <span class="form-accent">Subcontractor Application</span>
 
-                <!-- WEBHOOK PLACEHOLDER NOTE (remove before going live) -->
-                <div class="webhook-note">
-                    ⚙ Form webhook: <code>https://services.leadconnectorhq.com/hooks/CONTRACTOR_WEBHOOK_ID</code><br>
-                    Replace CONTRACTOR_WEBHOOK_ID with your GoHighLevel contractor webhook before launch.
+                <div class="careers-form" role="status" data-delivery-state="secure-channel-required">
+                    <p style="color:rgba(255,255,255,0.75); font-size:16px; line-height:1.8; margin-bottom:0;">
+                        Online applications are temporarily unavailable while secure submission delivery is being
+                        verified. No application information is collected on this page until that connection is ready.
+                    </p>
                 </div>
-
-                <!-- ACTION PLACEHOLDER: replace with GHL webhook URL -->
-                <form class="careers-form" id="contractorApplicationForm"
-                      method="POST"
-                      enctype="multipart/form-data"
-                      action="https://services.leadconnectorhq.com/hooks/CONTRACTOR_WEBHOOK_ID">
-
-                    <div class="form-grid-2">
-                        <input type="text" name="name" placeholder="Your Full Name *" required id="appName">
-                        <input type="text" name="business_name" placeholder="Business Name *" required id="appBusiness">
-                    </div>
-
-                    <div class="form-grid-2">
-                        <input type="tel" name="phone" placeholder="Phone Number *" required id="appPhone">
-                        <input type="email" name="email" placeholder="Email Address *" required id="appEmail">
-                    </div>
-
-                    <div class="form-grid-2">
-                        <select name="trade" required id="appTrade">
-                            <option value="">Trade Specialty *</option>
-                            <option value="hardscape-pavers">Hardscapes & Pavers</option>
-                            <option value="outdoor-living">Outdoor Living Structures</option>
-                            <option value="retaining-walls">Retaining Walls</option>
-                            <option value="landscape-construction">Landscape Construction</option>
-                            <option value="demo-grading">Demo & Grading</option>
-                            <option value="irrigation">Irrigation Systems</option>
-                            <option value="lighting">Landscape Lighting</option>
-                            <option value="pool-deck">Pool Deck Work</option>
-                            <option value="concrete-stone">Concrete & Stonework</option>
-                            <option value="multiple">Multiple Trades</option>
-                            <option value="other">Other</option>
-                        </select>
-                        <select name="experience" required id="appExperience">
-                            <option value="">Years of Experience *</option>
-                            <option value="1-2">1 – 2 Years</option>
-                            <option value="3-5">3 – 5 Years</option>
-                            <option value="6-10">6 – 10 Years</option>
-                            <option value="10+">10+ Years</option>
-                        </select>
-                    </div>
-
-                    <input type="text" name="service_area" placeholder="Primary Service Area (City / County) *" required id="appServiceArea">
-
-                    <div class="form-grid-2">
-                        <input type="text" name="license_number" placeholder="License Number (if applicable)" id="appLicense">
-                        <select name="insurance_status" required id="appInsurance">
-                            <option value="">Insurance Status *</option>
-                            <option value="fully-insured">Fully Insured — GL & Workers Comp</option>
-                            <option value="gl-only">General Liability Only</option>
-                            <option value="in-progress">Coverage In Progress</option>
-                            <option value="none">Not Currently Insured</option>
-                        </select>
-                    </div>
-
-                    <textarea name="message" placeholder="Tell us about your experience, crew size, past projects, and what makes your team stand out. *" rows="6" required id="appMessage"></textarea>
-
-                    <!-- File Upload -->
-                    <div class="file-upload-wrap">
-                        <label class="file-upload-label" for="appFiles">
-                            <span class="file-upload-icon">📁</span>
-                            <div class="file-upload-text">
-                                <strong>Upload Portfolio, License, Insurance, or Project Photos</strong>
-                                <span>PDF, JPG, PNG — Max 10MB per file. You may select multiple files.</span>
-                            </div>
-                        </label>
-                        <input type="file" name="files" id="appFiles" multiple accept=".pdf,.jpg,.jpeg,.png,.webp">
-                        <p id="fileNameDisplay"></p>
-                    </div>
-
-                    <!-- Consent Checkbox -->
-                    <div class="form-consent">
-                        <label>
-                            <input type="checkbox" name="contractor_consent" id="contractorConsent" required>
-                            <span>I agree to be contacted by Master Scapes regarding subcontractor opportunities. Message and data rates may apply. Reply STOP to opt out.</span>
-                        </label>
-                        <p class="form-consent-note">No mobile information will be shared with third parties or affiliates for marketing or promotional purposes.</p>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary" id="appSubmitBtn">Submit Application</button>
-
-                    <div class="form-response" id="appFormResponse"></div>
-                </form>
             </div>
         </div>
     </section>
@@ -616,7 +524,7 @@
                     <p class="footer-tagline">Pinnacle of Craftsmanship</p>
                 </div>
                 <div class="footer-info">
-                    <p>&copy; 2025 Master Scapes. All Rights Reserved.</p>
+                    <p>&copy; 2026 Master Scapes. All Rights Reserved.</p>
                     <p>Licensed | Bonded | Insured</p>
                     <p style="font-size:13px; color:#555; margin-top:10px; font-weight:300; letter-spacing:1px;">Master
                         Scapes is a flagship brand of Lifestyle Landscape Design &amp; Construction Inc.</p>
@@ -635,22 +543,6 @@
 
     <script src="script.js"></script>
     <script>
-        // File name display
-        const fileInput = document.getElementById('appFiles');
-        const fileDisplay = document.getElementById('fileNameDisplay');
-        if (fileInput && fileDisplay) {
-            fileInput.addEventListener('change', function () {
-                const files = Array.from(this.files);
-                if (files.length === 0) {
-                    fileDisplay.textContent = '';
-                } else if (files.length === 1) {
-                    fileDisplay.textContent = '📎 ' + files[0].name;
-                } else {
-                    fileDisplay.textContent = '📎 ' + files.length + ' files selected';
-                }
-            });
-        }
-
         // Mobile toggle
         const toggle = document.querySelector('.mobile-toggle');
         const navMenu = document.querySelector('.nav-menu');
