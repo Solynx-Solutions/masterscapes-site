@@ -52,13 +52,20 @@ video {
 }
 
 body {
-    font-family: 'Oswald', sans-serif;
-    line-height: 1.6;
+    font-family: 'Manrope', Arial, sans-serif;
+    line-height: 1.7;
     color: var(--text-light);
     background: var(--primary-dark);
     overflow-x: hidden; /* Mobile fix: belt-and-suspenders overflow lock on body */
     width: 100%;
     max-width: 100%;
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 600;
 }
 
 /* Mobile fix: responsive padding via clamp — no overflow on narrow screens */
@@ -232,9 +239,10 @@ body {
 .nav-link {
     color: var(--text-light);
     text-decoration: none;
-    font-weight: 500;
-    font-size: 16px;
-    letter-spacing: 2px;
+    font-family: 'Manrope', Arial, sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.13em;
     text-transform: uppercase;
     transition: var(--transition);
     position: relative;
@@ -565,7 +573,7 @@ body {
     border: none;
     cursor: pointer;
     font-size: clamp(14px, 2vw, 16px);
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Manrope', Arial, sans-serif;
     position: relative;
     overflow: hidden;
 }
@@ -600,7 +608,7 @@ body {
     font-size: clamp(14px, 2vw, 16px);
     letter-spacing: 2px;
     text-transform: uppercase;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Manrope', Arial, sans-serif;
     transition: var(--transition);
     cursor: pointer;
     position: relative;
@@ -656,14 +664,13 @@ section {
 }
 
 .section-title {
-    font-size: clamp(36px, 6vw, 70px);
+    font: 600 clamp(46px, 6vw, 76px)/0.95 'Cormorant Garamond', Georgia, serif;
     text-align: center;
     margin-bottom: 20px;
     color: var(--text-light);
     /* Mobile fix: clamp letter-spacing to prevent overflow on narrow screens */
-    letter-spacing: clamp(1px, 1vw, 4px);
-    text-transform: uppercase;
-    font-weight: 700;
+    letter-spacing: -0.025em;
+    text-transform: none;
 }
 
 .section-subtitle {
@@ -671,9 +678,10 @@ section {
     font-size: clamp(14px, 2vw, 20px);
     color: var(--accent-gold);
     margin-bottom: 80px;
-    font-weight: 400;
+    font-family: 'Manrope', Arial, sans-serif;
+    font-weight: 600;
     /* Mobile fix: clamp letter-spacing for subtitle */
-    letter-spacing: clamp(1px, 1vw, 4px);
+    letter-spacing: 0.14em;
     text-transform: uppercase;
 }
 
@@ -731,17 +739,16 @@ section {
 .service-card h3 {
     color: var(--accent-gold);
     margin-bottom: 20px;
-    font-size: clamp(22px, 3vw, 28px);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    font-weight: 600;
+    font: 600 clamp(27px, 3vw, 34px)/1.05 'Cormorant Garamond', Georgia, serif;
+    letter-spacing: -0.01em;
+    text-transform: none;
 }
 
 .service-card p {
     color: var(--text-gray);
     line-height: 1.8;
     font-size: 17px;
-    font-weight: 300;
+    font-weight: 400;
 }
 
 /* About Section */
@@ -814,7 +821,8 @@ section {
     font-size: 20px;
     color: var(--accent-gold);
     margin-bottom: 25px;
-    font-weight: 500;
+    font-family: 'Manrope', Arial, sans-serif;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 4px;
 }
@@ -824,7 +832,7 @@ section {
     color: var(--text-gray);
     line-height: 1.8;
     font-size: 18px;
-    font-weight: 300;
+    font-weight: 400;
 }
 
 .about-text strong {
@@ -862,10 +870,9 @@ section {
 .feature-text h4 {
     color: var(--text-light);
     margin-bottom: 5px;
-    font-size: 18px;
+    font: 600 23px/1.1 'Cormorant Garamond', Georgia, serif;
     text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 2px;
+    letter-spacing: 0.01em;
 }
 
 .feature-text p {
@@ -925,11 +932,10 @@ section {
 
 .gallery-overlay h3 {
     margin-bottom: 10px;
-    font-size: 26px;
+    font: 600 31px/1.05 'Cormorant Garamond', Georgia, serif;
     color: var(--accent-gold);
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 1px;
+    text-transform: none;
+    letter-spacing: 0;
 }
 
 .gallery-overlay p {
@@ -953,10 +959,9 @@ section {
 .contact-form h3 {
     color: #fff;
     margin-bottom: 40px;
-    font-size: 32px;
-    text-transform: uppercase;
-    font-weight: 700;
-    letter-spacing: 2px;
+    font: 600 38px/1.05 'Cormorant Garamond', Georgia, serif;
+    text-transform: none;
+    letter-spacing: -0.01em;
 }
 
 .info-item {
@@ -1000,7 +1005,7 @@ section {
     padding: clamp(12px, 2vw, 20px);
     margin-bottom: 25px;
     border: 1px solid var(--glass-border);
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Manrope', Arial, sans-serif;
     font-size: 16px; /* Keep ≥16px to prevent iOS auto-zoom */
     transition: var(--transition);
     background: var(--secondary-dark);
@@ -1498,7 +1503,7 @@ section {
     flex-direction: column;
     align-items: flex-end;
     gap: 14px;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Manrope', Arial, sans-serif;
 }
 
 /* Panel body */
