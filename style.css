@@ -1756,3 +1756,8 @@ section {
     width: 16px;
     height: 16px;
 }
+
+/* Full, authentic SOLYNX footer credit. Preserve emblem and wordmark. */
+.solynx-credit{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;width:fit-content;max-width:100%;min-height:54px;margin:24px auto 0;color:inherit;text-decoration:none;font:500 12px/1.5 Arial,sans-serif;letter-spacing:.02em;text-transform:none;grid-column:1/-1}
+.solynx-credit img{display:block;flex:none;width:184px;height:54px;max-width:100%;object-fit:contain;background:#fff;border-radius:4px;filter:none;opacity:1}
+.solynx-credit:focus-visible{outline:2px solid currentColor;outline-offset:6px;border-radius:4px}
