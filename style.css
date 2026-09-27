@@ -1762,4 +1762,6 @@ section {
 .solynx-credit img{display:block;flex:none;width:184px;height:54px;max-width:100%;object-fit:contain;background:#fff;border-radius:4px;filter:none;opacity:1}
 .solynx-credit:focus-visible{outline:2px solid currentColor;outline-offset:6px;border-radius:4px}
 
-@media(max-width:640px){.solynx-credit{flex-direction:column;align-items:flex-start;gap:8px;margin-left:24px;margin-right:auto;text-align:left}}
+@media(max-width:640px){.solynx-credit{flex-direction:row;align-items:center;flex-wrap:nowrap;gap:8px;margin-left:24px;margin-right:auto;text-align:left}}
+
+@media(max-width:640px){.solynx-credit img{order:-1}}
