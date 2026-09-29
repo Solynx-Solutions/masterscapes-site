@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /images/assets/
+
+Sitemap: https://www.masterscapes.pro/sitemap.xml
