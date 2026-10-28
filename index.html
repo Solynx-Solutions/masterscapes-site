@@ -352,10 +352,18 @@
     <!-- ============================================================ -->
     <!-- LEADCONNECTOR CHAT WIDGET -->
     <!-- ============================================================ -->
-    <script src="https://widgets.leadconnectorhq.com/loader.js"
-        data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js"
-        data-widget-id="6a721ca85a8261fbe4d52c23"
-        data-source="WEB_USER"></script>
+    <script>
+        // Keep Preview review sessions read-only. The production domains retain
+        // the existing LeadConnector widget and its normal attribution traffic.
+        if (!window.location.hostname.endsWith('.vercel.app')) {
+            const leadConnectorWidget = document.createElement('script');
+            leadConnectorWidget.src = 'https://widgets.leadconnectorhq.com/loader.js';
+            leadConnectorWidget.dataset.resourcesUrl = 'https://widgets.leadconnectorhq.com/chat-widget/loader.js';
+            leadConnectorWidget.dataset.widgetId = '6a721ca85a8261fbe4d52c23';
+            leadConnectorWidget.dataset.source = 'WEB_USER';
+            document.body.appendChild(leadConnectorWidget);
+        }
+    </script>
 
 </body>
 

@@ -170,13 +170,16 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Auto-open after 8 seconds on first visit
-        const hasSeenWidget = sessionStorage.getItem('ms_chat_seen');
-        if (!hasSeenWidget) {
-            setTimeout(() => {
-                openChat();
-                sessionStorage.setItem('ms_chat_seen', '1');
-            }, 8000);
+        // Do not persist or auto-open the chat hint during Vercel Preview QA.
+        // Production domains retain the existing first-visit behavior.
+        if (!window.location.hostname.endsWith('.vercel.app')) {
+            const hasSeenWidget = sessionStorage.getItem('ms_chat_seen');
+            if (!hasSeenWidget) {
+                setTimeout(() => {
+                    openChat();
+                    sessionStorage.setItem('ms_chat_seen', '1');
+                }, 8000);
+            }
         }
     }
 });
