@@ -31,6 +31,9 @@ async function runFlow(browser, name, viewport, deliverySucceeds = true) {
     return route.abort('blockedbyclient');
   });
   const page = await context.newPage();
+  await page.addInitScript(() => {
+    window.MASTER_SCAPES_PLANNER_SUBMISSION = { mode: 'receiver' };
+  });
   const pageErrors = [];
   const writes = [];
   page.on('pageerror', error => pageErrors.push(error.message));
@@ -57,11 +60,11 @@ async function runFlow(browser, name, viewport, deliverySucceeds = true) {
   await page.getByRole('button', { name: 'Premium Pavers' }).click();
   await page.getByRole('button', { name: 'Natural Stone' }).click();
   await page.getByRole('button', { name: 'Continue' }).click();
-  await page.getByRole('button', { name: '600-1,000 sq ft' }).click();
+  await page.getByRole('button', { name: '600–1,000 sq ft' }).click();
   await page.getByRole('button', { name: 'Continue' }).click();
-  await page.getByRole('button', { name: '$75,000 - $120,000' }).click();
+  await page.getByRole('button', { name: '$75,000 – $120,000' }).click();
   await page.getByRole('button', { name: 'Continue' }).click();
-  await page.getByRole('button', { name: '1-3 Months' }).click();
+  await page.getByRole('button', { name: '1–3 Months' }).click();
   await page.getByRole('button', { name: 'Continue' }).click();
 
   await page.getByLabel('Full name').fill('Preview Reviewer');
@@ -121,6 +124,82 @@ async function runFlow(browser, name, viewport, deliverySucceeds = true) {
   await context.close();
 }
 
+async function runNativeHandoff(browser, name, viewport) {
+  const context = await browser.newContext({ viewport });
+  await context.route('**/*', async route => {
+    const url = route.request().url();
+    if (url.startsWith('https://link.masterscapes.pro/widget/survey/')) {
+      return route.fulfill({
+        status: 200,
+        contentType: 'text/html',
+        body: '<!doctype html><title>Native form preview</title><h1>Native contact and consent form</h1>'
+      });
+    }
+    if (url.startsWith(baseUrl)) return route.continue();
+    return route.abort('blockedbyclient');
+  });
+  const page = await context.newPage();
+  await page.addInitScript(() => {
+    window.MASTER_SCAPES_PLANNER_SUBMISSION = {
+      mode: 'native',
+      native: {
+        enabled: true,
+        surveyUrl: 'https://link.masterscapes.pro/widget/survey/Tp94Vzomz8umXh1V9zgW',
+        sourceValue: 'Master Scapes Project Planner',
+        queryKeys: {
+          projectType: 'single_dropdown_3mln',
+          materials: 'checkbox_1828',
+          squareFootage: 'single_dropdown_491j',
+          budget: 'single_dropdown_4q2j',
+          timeline: 'single_dropdown_4kx2'
+        },
+        materialsPrefill: { enabled: false, encoding: 'unverified' },
+        verified: {
+          surveyOpen: true,
+          contactFieldsVisible: true,
+          consentVisible: true,
+          thankYouAndConsultationLink: true,
+          notificationSettingsReadBack: true
+        }
+      }
+    };
+  });
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto(`${baseUrl}/project-planner/`, { waitUntil: 'domcontentloaded' });
+  await page.getByRole('button', { name: 'Plan my project' }).click();
+  await page.getByRole('button', { name: 'Luxury Patio' }).click();
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await page.getByRole('button', { name: 'Premium Pavers' }).click();
+  await page.getByRole('button', { name: 'Natural Stone' }).click();
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await page.getByRole('button', { name: '600–1,000 sq ft' }).click();
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await page.getByRole('button', { name: '$75,000 – $120,000' }).click();
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await page.getByRole('button', { name: '1–3 Months' }).click();
+  await page.getByRole('button', { name: 'Continue' }).click();
+
+  assert(await page.getByRole('heading', { name: 'Review your project plan' }).isVisible(), `${name} reaches the editable project summary`);
+  assert(await page.getByText('Contact', { exact: true }).count() === 0, `${name} collects no contact data in the custom planner`);
+  await page.getByRole('button', { name: 'Continue to contact details' }).click();
+  await page.getByRole('heading', { name: 'Add your contact details and submit.' }).waitFor();
+  const src = await page.locator('iframe.native-submit-frame').getAttribute('src');
+  const nativeUrl = new URL(src);
+  assert(nativeUrl.searchParams.get('single_dropdown_3mln') === 'Luxury Patio', `${name} prefills project type with the verified key`);
+  assert(nativeUrl.searchParams.get('single_dropdown_491j') === '600–1,000 sq ft', `${name} prefills area with the verified key`);
+  assert(nativeUrl.searchParams.get('single_dropdown_4q2j') === '$75,000 – $120,000', `${name} prefills budget with the verified key`);
+  assert(nativeUrl.searchParams.get('single_dropdown_4kx2') === '1–3 Months', `${name} prefills timeline with the verified key`);
+  assert(!nativeUrl.searchParams.has('checkbox_1828'), `${name} leaves materials visible and unprefilled until encoding is proven`);
+  assert(!['full_name', 'email', 'phone', 'address1', 'location', 'consent'].some(key => nativeUrl.searchParams.has(key)), `${name} places no personal or consent data in the URL`);
+  assert(await page.getByText('Project plan received').count() === 0, `${name} does not invent a parent-page success state`);
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  assert(overflow <= 1, `${name} has no visible horizontal overflow`);
+  assert(errors.length === 0, `${name} has no page errors`);
+  await page.screenshot({ path: path.join(screenshotDir, `${name}-handoff.png`), fullPage: true });
+  await context.close();
+}
+
 (async () => {
   const browser = await chromium.launch({
     headless: true,
@@ -130,6 +209,8 @@ async function runFlow(browser, name, viewport, deliverySucceeds = true) {
     await runFlow(browser, 'desktop', { width: 1440, height: 1000 });
     await runFlow(browser, 'mobile', { width: 390, height: 844 });
     await runFlow(browser, 'mobile-failure', { width: 390, height: 844 }, false);
+    await runNativeHandoff(browser, 'desktop-native', { width: 1440, height: 1000 });
+    await runNativeHandoff(browser, 'mobile-native', { width: 390, height: 844 });
   } finally {
     await browser.close();
   }

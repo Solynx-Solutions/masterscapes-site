@@ -6,6 +6,7 @@ const read = relative => fs.readFileSync(path.join(root, relative), 'utf8');
 const homepage = read('index.html');
 const plannerHtml = read('project-planner/index.html');
 const plannerJs = read('project-planner/app.js');
+const submissionConfig = read('project-planner/submission-config.js');
 const plannerApi = read('api/project-planner-submit.js');
 
 const checks = [
@@ -13,9 +14,14 @@ const checks = [
   ['planner retains the approved quiz title', plannerHtml.includes('<title>Masterscapes Luxury Project Qualification Quiz</title>')],
   ['planner returns to the existing homepage', plannerHtml.includes('href="../"')],
   ['planner submits only to the first-party adapter', plannerJs.includes('fetch("/api/project-planner-submit"') && !/fetch\(["']https?:/i.test(plannerJs)],
+  ['native handoff is disabled by default', submissionConfig.includes('mode: "disabled"') && submissionConfig.includes('enabled: false')],
+  ['native handoff uses all verified query keys', ['single_dropdown_3mln', 'checkbox_1828', 'single_dropdown_491j', 'single_dropdown_4q2j', 'single_dropdown_4kx2'].every(key => submissionConfig.includes(key))],
+  ['materials prefill remains off until encoding is proven', submissionConfig.includes('materialsPrefill') && submissionConfig.includes('encoding: "unverified"')],
+  ['native URL excludes personal and consent fields', !/(fullName|phone|email|location|consent):\s*["'](?:single_|checkbox_)/.test(submissionConfig) && plannerJs.includes('No personal information or consent was added')],
+  ['native provider owns submission success', plannerJs.includes('Receipt is confirmed inside that form') && !plannerJs.includes('addEventListener("message"')],
   ['planner contains no browser persistence primitive', !/\b(localStorage|sessionStorage|indexedDB)\b/.test(plannerJs)],
   ['review remains editable', plannerJs.includes('data-edit="${stepIndex}"') && plannerJs.includes('currentStep = Number(button.dataset.edit)')],
-  ['review states the no-score boundary', plannerJs.includes('submitting does not calculate a score, assign a fit label, or estimate pricing')],
+  ['review states the no-score boundary', plannerJs.includes('does not calculate a score, assign a fit label, or estimate pricing')],
   ['planner requires contact consent', plannerJs.includes('contactConsent') && plannerJs.includes('Please confirm that Master Scapes may contact you')],
   ['planner requires SMS consent for text follow-up', plannerJs.includes('Reply STOP to unsubscribe or HELP for help') && plannerJs.includes('answers.contact.followup === "Text message" && !answers.consent.sms')],
   ['completion uses the approved close', plannerJs.includes('Let’s bring your outdoor vision to life.')],

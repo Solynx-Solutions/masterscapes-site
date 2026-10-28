@@ -2,6 +2,12 @@
   "use strict";
 
   const app = document.querySelector("#app");
+  const submissionConfig = window.MASTER_SCAPES_PLANNER_SUBMISSION || { mode: "disabled" };
+  const submissionMode = ["disabled", "native", "receiver"].includes(submissionConfig.mode)
+    ? submissionConfig.mode
+    : "disabled";
+  const nativeConfig = submissionConfig.native || {};
+  const usesReceiver = submissionMode === "receiver";
   const initialAnswers = () => ({
     projectType: "",
     materials: [],
@@ -21,7 +27,7 @@
     }
   });
 
-  const steps = [
+  const projectSteps = [
     {
       id: "projectType",
       title: "What are you planning?",
@@ -40,22 +46,24 @@
       title: "How large is the project area?",
       intro: "An approximate range is enough for this early planning step.",
       compact: true,
-      choices: ["Under 300 sq ft", "300-600 sq ft", "600-1,000 sq ft", "1,000-1,500 sq ft", "1,500-2,000 sq ft", "2,000-3,000 sq ft", "3,000+ sq ft"]
+      choices: ["Under 300 sq ft", "300–600 sq ft", "600–1,000 sq ft", "1,000–1,500 sq ft", "1,500–2,000 sq ft", "2,000–3,000 sq ft", "3,000+ sq ft"]
     },
     {
       id: "budget",
       title: "What investment range are you considering?",
       intro: "Select the range you are currently planning around.",
-      note: "Proposed ranges for preview review only — pending Matt confirmation.",
-      choices: ["$50,000 - $75,000", "$75,000 - $120,000", "$120,000 - $200,000", "$200,000 - $300,000", "$300,000+"]
+      choices: ["$50,000 – $75,000", "$75,000 – $120,000", "$120,000 – $200,000", "$200,000 – $300,000", "$300,000+"]
     },
     {
       id: "timeline",
       title: "When would you like to begin?",
       intro: "Choose the timing that most closely reflects where you are today.",
-      choices: ["ASAP", "Within 30 Days", "1-3 Months", "Just Planning"]
-    },
-    { id: "contact", title: "How should the team follow up?" },
+      choices: ["ASAP", "Within 30 Days", "1–3 Months", "Just Planning"]
+    }
+  ];
+  const steps = [
+    ...projectSteps,
+    ...(usesReceiver ? [{ id: "contact", title: "How should the team follow up?" }] : []),
     { id: "review", title: "Review your project plan" }
   ];
 
@@ -66,6 +74,7 @@
   let submissionMessage = "";
   let submitting = false;
   let receiptId = "";
+  let nativeSubmitUrl = "";
 
   const lockIcon = `
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
@@ -79,6 +88,9 @@
   }
 
   function renderLanding() {
+    const privacyCopy = usesReceiver
+      ? "Your plan is sent only after you review it and select Submit project plan."
+      : "Review your project selections first. Contact details and consent are entered only in the secure Master Scapes form.";
     app.innerHTML = `
       <div class="landing">
         <div class="landing-copy">
@@ -86,7 +98,7 @@
           <h1>Bring your outdoor vision into focus.</h1>
           <p>Share a few details about your project, preferred materials, timing, and priorities. Review every answer before sending your plan to the Master Scapes team.</p>
           <button class="primary-button" type="button" data-action="start">Plan my project</button>
-          <p class="privacy-note">${lockIcon}<span>Your plan is sent only after you review it and select Submit project plan.</span></p>
+          <p class="privacy-note">${lockIcon}<span>${privacyCopy}</span></p>
         </div>
         <div class="landing-visual" role="img" aria-label="A completed luxury outdoor living space">
           <div class="visual-note">Design-led outdoor living</div>
@@ -164,21 +176,19 @@
     const contact = answers.contact;
     const contactPrimary = [contact.fullName, contact.email, contact.phone].filter(Boolean).join(" · ");
     const contactDetail = [contact.location ? `Location: ${contact.location}` : "Location not provided", `Preferred follow-up: ${contact.followup}`].join(" · ");
-    const cards = [
+    const projectCards = [
       summaryCard("Project type", answers.projectType, 0),
       summaryCard("Materials", answers.materials.join(", "), 1),
       summaryCard("Approximate area", answers.squareFootage, 2),
       summaryCard("Investment range", answers.budget, 3),
-      summaryCard("Timeline", answers.timeline, 4),
-      summaryCard("Contact", contactPrimary, 5, true, contactDetail)
-    ].join("");
-
-    renderStepFrame(`
-      <p class="eyebrow">Your project at a glance</p>
-      <h2 tabindex="-1">Review your project plan</h2>
-      <p class="step-intro">Use any Change control to edit an answer. Nothing is sent until you submit below.</p>
-      <div class="summary-grid">${cards}</div>
-      <p class="review-disclosure"><strong>Planner boundary:</strong> submitting does not calculate a score, assign a fit label, or estimate pricing. It sends the answers shown above to Master Scapes for project follow-up.</p>
+      summaryCard("Timeline", answers.timeline, 4)
+    ];
+    if (usesReceiver) projectCards.push(summaryCard("Contact", contactPrimary, 5, true, contactDetail));
+    const cards = projectCards.join("");
+    const nativeReviewCopy = submissionMode === "native"
+      ? "Continue to the secure Master Scapes form to confirm the visible project fields, add your contact details, choose consent, and submit."
+      : "Online submission remains disabled until the secure Master Scapes form and notifications are verified.";
+    const consentPanel = usesReceiver ? `
       <div class="consent-panel">
         <label class="consent-choice" for="contactConsent">
           <input id="contactConsent" type="checkbox" ${answers.consent.contact ? "checked" : ""}>
@@ -189,16 +199,26 @@
           <span>By checking this box, I agree to receive text messages from Master Scapes at the phone number provided. Message and data rates may apply. Message frequency varies. Reply STOP to unsubscribe or HELP for help. ${contact.followup === "Text message" ? "Required for text follow-up." : "Optional."}</span>
         </label>
         <p class="consent-links"><a href="../privacy.html">Privacy Policy</a> · <a href="../terms.html">Terms of Service</a></p>
-      </div>
+      </div>` : `
+      <p class="review-disclosure"><strong>Secure final step:</strong> ${nativeReviewCopy} Materials remain visible there for confirmation; they are not placed in the URL while checkbox encoding is unverified.</p>`;
+
+    renderStepFrame(`
+      <p class="eyebrow">Your project at a glance</p>
+      <h2 tabindex="-1">Review your project plan</h2>
+      <p class="step-intro">Use any Change control to edit an answer. Nothing has been submitted.</p>
+      <div class="summary-grid">${cards}</div>
+      <p class="review-disclosure"><strong>Planner boundary:</strong> this planner does not calculate a score, assign a fit label, or estimate pricing.</p>
+      ${consentPanel}
       ${validationMarkup()}
-      ${submissionMessage ? `<p class="submission-status" role="alert">${escapeHtml(submissionMessage)}</p>` : ""}`, true);
+      ${submissionMessage ? `<p class="submission-status" role="alert">${escapeHtml(submissionMessage)}</p>` : ""}`, true,
+      usesReceiver ? "Submit project plan" : "Continue to contact details");
   }
 
   function validationMarkup() {
     return validationMessage ? `<p class="validation" role="alert">${escapeHtml(validationMessage)}</p>` : "";
   }
 
-  function renderStepFrame(content, finalStep = false) {
+  function renderStepFrame(content, finalStep = false, finalLabel = "Submit project plan") {
     app.innerHTML = `
       <div class="step-layout">
         ${railMarkup()}
@@ -206,7 +226,7 @@
           <div class="step-content">${content}</div>
           <div class="step-actions">
             <button class="text-button" type="button" data-action="back">Back</button>
-            <button class="primary-button" type="button" data-action="${finalStep ? "finish" : "next"}" ${finalStep && submitting ? "disabled aria-busy=\"true\"" : ""}>${finalStep ? (submitting ? "Sending…" : "Submit project plan") : "Continue"}</button>
+            <button class="primary-button" type="button" data-action="${finalStep ? "finish" : "next"}" ${finalStep && submitting ? "disabled aria-busy=\"true\"" : ""}>${finalStep ? (submitting ? "Sending…" : finalLabel) : "Continue"}</button>
           </div>
         </section>
       </div>`;
@@ -227,6 +247,21 @@
             <button class="text-button restart-button" type="button" data-action="restart">Start again</button>
           </div>
         </div>
+      </section>`;
+    focusHeading();
+  }
+
+  function renderNativeSubmit() {
+    app.innerHTML = `
+      <section class="native-submit">
+        <div class="native-submit-head">
+          <p class="eyebrow">Secure final step</p>
+          <h2 tabindex="-1">Add your contact details and submit.</h2>
+          <p>Confirm the visible project selections, enter your contact details, and choose consent in the Master Scapes form below. Receipt is confirmed inside that form after it is submitted.</p>
+          <p class="native-boundary">No personal information or consent was added to this page URL. Materials remain visible for you to confirm manually.</p>
+          <button class="text-button" type="button" data-action="back-to-review">Back to project review</button>
+        </div>
+        <iframe class="native-submit-frame" src="${escapeHtml(nativeSubmitUrl)}" title="Master Scapes project consultation request" loading="eager" referrerpolicy="strict-origin-when-cross-origin"></iframe>
       </section>`;
     focusHeading();
   }
@@ -264,7 +299,60 @@
     return `planner-${Date.now()}-${Math.random().toString(36).slice(2)}`;
   }
 
+  function nativeConfigurationError() {
+    if (submissionMode !== "native" || nativeConfig.enabled !== true) return "Online submission is not active yet.";
+    let surveyUrl;
+    try {
+      surveyUrl = new URL(nativeConfig.surveyUrl);
+    } catch {
+      return "The secure submission form is not configured.";
+    }
+    if (surveyUrl.protocol !== "https:" || surveyUrl.hostname !== "link.masterscapes.pro" || !surveyUrl.pathname.startsWith("/widget/survey/")) {
+      return "The secure submission form is not configured.";
+    }
+    const requiredKeys = ["projectType", "materials", "squareFootage", "budget", "timeline"];
+    if (requiredKeys.some(key => !/^[a-z0-9_]{4,80}$/i.test(nativeConfig.queryKeys?.[key] || ""))) {
+      return "The project-field mapping is incomplete.";
+    }
+    const verificationKeys = ["surveyOpen", "contactFieldsVisible", "consentVisible", "thankYouAndConsultationLink", "notificationSettingsReadBack"];
+    if (verificationKeys.some(key => nativeConfig.verified?.[key] !== true)) {
+      return "The secure submission form is still being verified.";
+    }
+    if (nativeConfig.materialsPrefill?.enabled === true && nativeConfig.materialsPrefill?.encoding !== "verified-repeat") {
+      return "The materials prefill format has not been verified.";
+    }
+    return "";
+  }
+
+  function buildNativeSubmitUrl() {
+    const url = new URL(nativeConfig.surveyUrl);
+    const singleAnswers = {
+      projectType: answers.projectType,
+      squareFootage: answers.squareFootage,
+      budget: answers.budget,
+      timeline: answers.timeline
+    };
+    Object.entries(singleAnswers).forEach(([answerKey, value]) => {
+      url.searchParams.set(nativeConfig.queryKeys[answerKey], value);
+    });
+    if (nativeConfig.materialsPrefill?.enabled === true && nativeConfig.materialsPrefill.encoding === "verified-repeat") {
+      answers.materials.forEach(value => url.searchParams.append(nativeConfig.queryKeys.materials, value));
+    }
+    if (nativeConfig.sourceValue) url.searchParams.set("source", nativeConfig.sourceValue);
+    return url.toString();
+  }
+
   async function submitProjectPlan() {
+    if (!usesReceiver) {
+      submissionMessage = nativeConfigurationError();
+      if (submissionMessage) {
+        renderReview();
+        return;
+      }
+      nativeSubmitUrl = buildNativeSubmitUrl();
+      renderNativeSubmit();
+      return;
+    }
     syncConsentFromInputs();
     validationMessage = "";
     submissionMessage = "";
@@ -416,8 +504,14 @@
         submissionMessage = "";
         submitting = false;
         receiptId = "";
+        nativeSubmitUrl = "";
         currentStep = -1;
         render();
+        break;
+      case "back-to-review":
+        nativeSubmitUrl = "";
+        currentStep = steps.length - 1;
+        renderReview();
         break;
     }
   });
