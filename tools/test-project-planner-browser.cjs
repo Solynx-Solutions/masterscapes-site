@@ -11,10 +11,22 @@ function assert(condition, message) {
   console.log(`PASS ${message}`);
 }
 
-async function runFlow(browser, name, viewport) {
+async function runFlow(browser, name, viewport, deliverySucceeds = true) {
   const context = await browser.newContext({ viewport });
-  await context.route('**/*', route => {
-    const url = route.request().url();
+  const submissions = [];
+  await context.route('**/*', async route => {
+    const request = route.request();
+    const url = request.url();
+    if (url === `${baseUrl}/api/project-planner-submit` && request.method() === 'POST') {
+      submissions.push(request.postDataJSON());
+      return route.fulfill({
+        status: deliverySucceeds ? 202 : 502,
+        contentType: 'application/json',
+        body: JSON.stringify(deliverySucceeds
+          ? { accepted: true, receiptId: `MS-PLAN-${name.toUpperCase().replace(/[^A-Z0-9]/g, '-')}-0001`, duplicate: false }
+          : { accepted: false, code: 'delivery_unavailable' })
+      });
+    }
     if (url.startsWith(baseUrl)) return route.continue();
     return route.abort('blockedbyclient');
   });
@@ -72,14 +84,39 @@ async function runFlow(browser, name, viewport) {
   assert((await page.locator('.summary-grid').textContent()).includes('High-End Driveway'), `${name} edited answer survives return to summary`);
   await page.screenshot({ path: path.join(screenshotDir, `${name}-review.png`), fullPage: true });
 
-  await page.getByRole('button', { name: 'Finish preview' }).click();
-  assert(await page.getByRole('heading', { name: 'Let’s bring your outdoor vision to life.' }).isVisible(), `${name} shows the approved completion close`);
-  const consultation = page.getByRole('link', { name: 'Schedule My Project Consultation' });
-  assert((await consultation.getAttribute('href')).endsWith('/widget/booking/v4JyGfcCJLQ7nWzjdIIM'), `${name} uses the verified consultation route`);
-  assert((await page.locator('.completion-boundary').textContent()).includes('No submission was created'), `${name} retains the no-submission disclosure`);
-  await page.screenshot({ path: path.join(screenshotDir, `${name}-completion.png`), fullPage: true });
+  await page.getByRole('button', { name: 'Submit project plan' }).click();
+  assert((await page.getByRole('alert').textContent()).includes('confirm that Master Scapes may contact you'), `${name} blocks submission without contact consent`);
+  assert(writes.length === 0, `${name} emits no write before consent`);
+  await page.locator('#contactConsent').check();
+  await page.getByRole('button', { name: 'Submit project plan' }).click();
 
-  assert(writes.length === 0, `${name} walkthrough emits no write requests`);
+  assert(submissions.length === 1, `${name} sends exactly one planner payload`);
+  assert(submissions[0].consent.contact === true, `${name} sends explicit contact consent`);
+  assert(submissions[0].consent.sms === false, `${name} does not invent SMS consent`);
+  assert(/^[a-zA-Z0-9-]{16,80}$/.test(submissions[0].submissionId), `${name} sends an idempotency key`);
+
+  if (deliverySucceeds) {
+    await page.getByRole('heading', { name: 'Let’s bring your outdoor vision to life.' }).waitFor({ state: 'visible' });
+    assert(true, `${name} shows the approved completion close after acceptance`);
+    const consultation = page.getByRole('link', { name: 'Schedule My Project Consultation' });
+    assert((await consultation.getAttribute('href')).endsWith('/widget/booking/v4JyGfcCJLQ7nWzjdIIM'), `${name} uses the verified consultation route`);
+    assert((await page.locator('.completion-boundary').textContent()).includes('Confirmation: MS-PLAN-'), `${name} shows the durable receipt`);
+    assert((await page.locator('.completion-boundary').textContent()).includes('No score or automated pricing estimate'), `${name} preserves the no-score boundary`);
+    await page.screenshot({ path: path.join(screenshotDir, `${name}-completion.png`), fullPage: true });
+  } else {
+    await page.getByRole('alert').filter({ hasText: 'has not been marked received' }).waitFor({ state: 'visible' });
+    assert(await page.getByRole('heading', { name: 'Review your project plan' }).isVisible(), `${name} remains on review after failed delivery`);
+    assert((await page.getByRole('alert').textContent()).includes('has not been marked received'), `${name} reports failed delivery truthfully`);
+    assert(await page.getByRole('button', { name: 'Submit project plan' }).isEnabled(), `${name} permits a deliberate retry`);
+    assert(await page.getByText('Project plan received').count() === 0, `${name} does not show a false success state`);
+    await page.screenshot({ path: path.join(screenshotDir, `${name}-delivery-failure.png`), fullPage: true });
+  }
+
+  assert(writes.length === 1 && writes[0].startsWith('POST '), `${name} walkthrough emits only the expected POST`);
+  const storage = await page.evaluate(() => ({ local: localStorage.length, session: sessionStorage.length }));
+  assert(storage.local === 0 && storage.session === 0, `${name} leaves browser storage empty`);
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  assert(overflow <= 1, `${name} has no visible horizontal overflow`);
   assert(pageErrors.length === 0, `${name} walkthrough has no page errors`);
   await context.close();
 }
@@ -92,6 +129,7 @@ async function runFlow(browser, name, viewport) {
   try {
     await runFlow(browser, 'desktop', { width: 1440, height: 1000 });
     await runFlow(browser, 'mobile', { width: 390, height: 844 });
+    await runFlow(browser, 'mobile-failure', { width: 390, height: 844 }, false);
   } finally {
     await browser.close();
   }

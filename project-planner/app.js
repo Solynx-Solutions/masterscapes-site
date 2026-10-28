@@ -14,6 +14,10 @@
       email: "",
       location: "",
       followup: ""
+    },
+    consent: {
+      contact: false,
+      sms: false
     }
   });
 
@@ -58,6 +62,10 @@
   let answers = initialAnswers();
   let currentStep = -1;
   let validationMessage = "";
+  let submissionId = "";
+  let submissionMessage = "";
+  let submitting = false;
+  let receiptId = "";
 
   const lockIcon = `
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
@@ -76,9 +84,9 @@
         <div class="landing-copy">
           <p class="eyebrow">Masterscapes Luxury Project Qualification Quiz</p>
           <h1>Bring your outdoor vision into focus.</h1>
-          <p>Share a few details about your project, preferred materials, timing, and priorities. At the end, review every answer before this demo is complete.</p>
+          <p>Share a few details about your project, preferred materials, timing, and priorities. Review every answer before sending your plan to the Master Scapes team.</p>
           <button class="primary-button" type="button" data-action="start">Plan my project</button>
-          <p class="privacy-note">${lockIcon}<span>Review mode only — nothing is submitted or stored by this planner.</span></p>
+          <p class="privacy-note">${lockIcon}<span>Your plan is sent only after you review it and select Submit project plan.</span></p>
         </div>
         <div class="landing-visual" role="img" aria-label="A completed luxury outdoor living space">
           <div class="visual-note">Design-led outdoor living</div>
@@ -100,7 +108,7 @@
         <div class="progress-track" role="progressbar" aria-valuemin="1" aria-valuemax="${steps.length}" aria-valuenow="${currentStep + 1}" aria-label="Quiz progress">
           <span class="progress-fill" style="width:${progressPercent()}%"></span>
         </div>
-        <p class="rail-footnote">Your answers stay in this browser tab and disappear when the preview is refreshed.</p>
+        <p class="rail-footnote">Your answers stay in this browser tab until you choose to submit your project plan.</p>
       </aside>`;
   }
 
@@ -131,7 +139,7 @@
     renderStepFrame(`
       <p class="eyebrow">Almost there</p>
       <h2 tabindex="-1">How should the team follow up?</h2>
-      <p class="step-intro">Add the details you want shown in the review summary. This preview does not transmit them.</p>
+      <p class="step-intro">Add the details the Master Scapes team should use to follow up about your project.</p>
       <div class="field-grid">
         <div class="field"><label for="fullName">Full name</label><input id="fullName" name="fullName" autocomplete="name" value="${escapeHtml(contact.fullName)}" required></div>
         <div class="field"><label for="phone">Phone number</label><input id="phone" name="phone" type="tel" autocomplete="tel" value="${escapeHtml(contact.phone)}" required></div>
@@ -168,9 +176,22 @@
     renderStepFrame(`
       <p class="eyebrow">Your project at a glance</p>
       <h2 tabindex="-1">Review your project plan</h2>
-      <p class="step-intro">Use any Change control to edit an answer. Everything will remain available when you return here.</p>
+      <p class="step-intro">Use any Change control to edit an answer. Nothing is sent until you submit below.</p>
       <div class="summary-grid">${cards}</div>
-      <p class="review-disclosure"><strong>Demo boundary:</strong> finishing this preview does not calculate a score, assign a fit label, estimate pricing, or send these answers anywhere.</p>`, true);
+      <p class="review-disclosure"><strong>Planner boundary:</strong> submitting does not calculate a score, assign a fit label, or estimate pricing. It sends the answers shown above to Master Scapes for project follow-up.</p>
+      <div class="consent-panel">
+        <label class="consent-choice" for="contactConsent">
+          <input id="contactConsent" type="checkbox" ${answers.consent.contact ? "checked" : ""}>
+          <span>I agree that Master Scapes may contact me about this project using the information I provided.</span>
+        </label>
+        <label class="consent-choice" for="smsConsent">
+          <input id="smsConsent" type="checkbox" ${answers.consent.sms ? "checked" : ""}>
+          <span>By checking this box, I agree to receive text messages from Master Scapes at the phone number provided. Message and data rates may apply. Message frequency varies. Reply STOP to unsubscribe or HELP for help. ${contact.followup === "Text message" ? "Required for text follow-up." : "Optional."}</span>
+        </label>
+        <p class="consent-links"><a href="../privacy.html">Privacy Policy</a> · <a href="../terms.html">Terms of Service</a></p>
+      </div>
+      ${validationMarkup()}
+      ${submissionMessage ? `<p class="submission-status" role="alert">${escapeHtml(submissionMessage)}</p>` : ""}`, true);
   }
 
   function validationMarkup() {
@@ -185,7 +206,7 @@
           <div class="step-content">${content}</div>
           <div class="step-actions">
             <button class="text-button" type="button" data-action="back">Back</button>
-            <button class="primary-button" type="button" data-action="${finalStep ? "finish" : "next"}">${finalStep ? "Finish preview" : "Continue"}</button>
+            <button class="primary-button" type="button" data-action="${finalStep ? "finish" : "next"}" ${finalStep && submitting ? "disabled aria-busy=\"true\"" : ""}>${finalStep ? (submitting ? "Sending…" : "Submit project plan") : "Continue"}</button>
           </div>
         </section>
       </div>`;
@@ -197,10 +218,10 @@
       <section class="completion">
         <div class="completion-inner">
           <div class="completion-mark" aria-hidden="true">✓</div>
-          <p class="eyebrow">Project plan reviewed</p>
+          <p class="eyebrow">Project plan received</p>
           <h2 tabindex="-1">Let’s bring your outdoor vision to life.</h2>
-          <p>You’ve taken the first step. Next step is a conversation with MasterScapes to explore ideas, priorities and project details.</p>
-          <p class="completion-boundary">No submission was created, no score was calculated, and no information left this planner.</p>
+          <p>Your plan was received by Master Scapes. The team can now follow up about your ideas, priorities, and project details.</p>
+          <p class="completion-boundary">Confirmation: ${escapeHtml(receiptId)}. No score or automated pricing estimate was created.</p>
           <div class="completion-actions">
             <a class="primary-button consultation-link" href="https://link.masterscapes.pro/widget/booking/v4JyGfcCJLQ7nWzjdIIM">Schedule My Project Consultation</a>
             <button class="text-button restart-button" type="button" data-action="restart">Start again</button>
@@ -229,6 +250,71 @@
       const input = app.querySelector(`#${field}`);
       if (input) answers.contact[field] = input.value.trim();
     });
+  }
+
+  function syncConsentFromInputs() {
+    const contactConsent = app.querySelector("#contactConsent");
+    const smsConsent = app.querySelector("#smsConsent");
+    if (contactConsent) answers.consent.contact = contactConsent.checked;
+    if (smsConsent) answers.consent.sms = smsConsent.checked;
+  }
+
+  function createSubmissionId() {
+    if (window.crypto && typeof window.crypto.randomUUID === "function") return window.crypto.randomUUID();
+    return `planner-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  }
+
+  async function submitProjectPlan() {
+    syncConsentFromInputs();
+    validationMessage = "";
+    submissionMessage = "";
+    if (!answers.consent.contact) {
+      validationMessage = "Please confirm that Master Scapes may contact you about this project.";
+      renderReview();
+      return;
+    }
+    if (answers.contact.followup === "Text message" && !answers.consent.sms) {
+      validationMessage = "Please provide text-message consent or choose Phone or Email as your preferred follow-up.";
+      renderReview();
+      return;
+    }
+
+    submissionId ||= createSubmissionId();
+    submitting = true;
+    renderReview();
+    try {
+      const response = await fetch("/api/project-planner-submit", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          projectType: answers.projectType,
+          materials: answers.materials,
+          squareFootage: answers.squareFootage,
+          budget: answers.budget,
+          timeline: answers.timeline,
+          contact: answers.contact,
+          consent: {
+            contact: answers.consent.contact,
+            sms: answers.consent.sms,
+            version: "masterscapes-project-contact-v1"
+          },
+          submissionId,
+          source: "master-scapes-project-planner",
+          sourcePage: window.location.pathname,
+          website: ""
+        })
+      });
+      const result = await response.json().catch(() => null);
+      if (!response.ok || result?.accepted !== true || typeof result.receiptId !== "string") {
+        throw new Error("unconfirmed");
+      }
+      receiptId = result.receiptId;
+      renderCompletion();
+    } catch {
+      submissionMessage = "We could not confirm delivery. Your plan has not been marked received. Please try again, or schedule a consultation directly.";
+      submitting = false;
+      renderReview();
+    }
   }
 
   function validateCurrent() {
@@ -261,12 +347,12 @@
   function showValidation() {
     const existing = app.querySelector(".validation");
     if (existing) existing.remove();
-    const host = app.querySelector(".choice-grid:last-of-type, .field-grid");
+    const host = app.querySelector(".consent-panel, .choice-grid:last-of-type, .field-grid");
     host?.insertAdjacentHTML("afterend", validationMarkup());
     app.querySelector(".validation")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 
-  app.addEventListener("click", event => {
+  app.addEventListener("click", async event => {
     const button = event.target.closest("button");
     if (!button) return;
 
@@ -322,10 +408,14 @@
         render();
         break;
       case "finish":
-        renderCompletion();
+        await submitProjectPlan();
         break;
       case "restart":
         answers = initialAnswers();
+        submissionId = "";
+        submissionMessage = "";
+        submitting = false;
+        receiptId = "";
         currentStep = -1;
         render();
         break;

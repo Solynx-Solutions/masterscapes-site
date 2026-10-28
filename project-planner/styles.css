@@ -449,6 +449,43 @@ h1 {
   line-height: 1.5;
 }
 
+.consent-panel {
+  display: grid;
+  gap: 0.9rem;
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+}
+
+.consent-choice {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 0.75rem;
+  align-items: start;
+  color: #4f524b;
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.consent-choice input {
+  width: 20px;
+  height: 20px;
+  margin: 0.1rem 0 0;
+  accent-color: var(--gold-dark);
+}
+
+.consent-links,
+.submission-status {
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.consent-links a { color: var(--gold-dark); }
+.submission-status { color: var(--danger); font-weight: 600; }
+.primary-button:disabled { cursor: wait; opacity: 0.68; }
+
 .completion {
   display: grid;
   place-items: center;
@@ -521,7 +558,7 @@ h1 {
   .site-header { min-height: 78px; }
   .brand img { width: 148px; max-height: 46px; }
   .preview-pill { font-size: 0; }
-  .preview-pill::after { content: "Preview"; font-size: 0.67rem; }
+  .preview-pill::after { content: "Planner"; font-size: 0.67rem; }
   #app { min-height: calc(100vh - 156px); }
   .landing { min-height: calc(100vh - 156px); }
   .landing-copy { min-height: 500px; padding: 3rem 1.5rem; }
