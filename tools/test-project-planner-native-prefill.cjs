@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { chromium } = require(process.env.MS_PLAYWRIGHT_MODULE || 'playwright');
 
-const surveyBase = 'https://link.masterscapes.pro/widget/survey/Tp94Vzomz8umXh1V9zgW';
+const surveyBase = 'https://link.masterscapes.pro/widget/survey/eC2FhSBs8UQw0imOhv5X';
 const expected = {
   single_dropdown_3mln: 'Luxury Patio',
   single_dropdown_491j: '600–1,000 sq ft',
@@ -34,7 +34,11 @@ function assert(condition, message) {
   const page = await context.newPage();
   try {
     await page.goto(url.toString(), { waitUntil: 'networkidle', timeout: 30000 });
-    assert(!/survey closed/i.test(await page.locator('body').innerText()), 'native survey is publicly open');
+    const publicText = await page.locator('body').innerText();
+    assert(
+      !/survey(?:\s+is)?\s+(?:now\s+)?closed|stopped accepting responses|isn['’]t accepting responses/i.test(publicText),
+      'native survey is publicly open'
+    );
 
     const fieldState = [];
     const slideTexts = [];

@@ -2,10 +2,10 @@
   "use strict";
 
   window.MASTER_SCAPES_PLANNER_SUBMISSION ||= Object.freeze({
-    mode: "disabled",
+    mode: "native",
     native: Object.freeze({
-      enabled: false,
-      surveyUrl: "https://link.masterscapes.pro/widget/survey/Tp94Vzomz8umXh1V9zgW",
+      enabled: true,
+      surveyUrl: "https://link.masterscapes.pro/widget/survey/eC2FhSBs8UQw0imOhv5X",
       sourceValue: "Master Scapes Project Planner",
       queryKeys: Object.freeze({
         projectType: "single_dropdown_3mln",
@@ -19,11 +19,11 @@
         encoding: "unverified"
       }),
       verified: Object.freeze({
-        surveyOpen: false,
-        contactFieldsVisible: false,
-        consentVisible: false,
-        thankYouAndConsultationLink: false,
-        notificationSettingsReadBack: false
+        surveyOpen: true,
+        contactFieldsVisible: true,
+        consentVisible: true,
+        thankYouAndConsultationLink: true,
+        notificationSettingsReadBack: true
       })
     })
   });

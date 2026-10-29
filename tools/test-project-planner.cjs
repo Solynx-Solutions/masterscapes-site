@@ -14,7 +14,7 @@ const checks = [
   ['planner retains the approved quiz title', plannerHtml.includes('<title>Masterscapes Luxury Project Qualification Quiz</title>')],
   ['planner returns to the existing homepage', plannerHtml.includes('href="../"')],
   ['planner submits only to the first-party adapter', plannerJs.includes('fetch("/api/project-planner-submit"') && !/fetch\(["']https?:/i.test(plannerJs)],
-  ['native handoff is disabled by default', submissionConfig.includes('mode: "disabled"') && submissionConfig.includes('enabled: false')],
+  ['native handoff is enabled for the verified live survey', submissionConfig.includes('mode: "native"') && submissionConfig.includes('enabled: true') && submissionConfig.includes('eC2FhSBs8UQw0imOhv5X')],
   ['native handoff uses all verified query keys', ['single_dropdown_3mln', 'checkbox_1828', 'single_dropdown_491j', 'single_dropdown_4q2j', 'single_dropdown_4kx2'].every(key => submissionConfig.includes(key))],
   ['materials prefill remains off until encoding is proven', submissionConfig.includes('materialsPrefill') && submissionConfig.includes('encoding: "unverified"')],
   ['native URL excludes personal and consent fields', !/(fullName|phone|email|location|consent):\s*["'](?:single_|checkbox_)/.test(submissionConfig) && plannerJs.includes('No personal information or consent was added')],
