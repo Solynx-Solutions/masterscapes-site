@@ -547,7 +547,7 @@ h1 {
 .native-submit-frame {
   display: block;
   width: 100%;
-  min-height: 940px;
+  height: 720px;
   border: 0;
   background: #fff;
 }
