@@ -50,9 +50,16 @@ async function run({ method = 'POST', origin = 'https://www.masterscapes.pro', b
 ;(async () => {
   resetEnv()
   process.env.MASTER_SCAPES_PLANNER_DELIVERY_ENABLED = 'false'
+  let disabledFetchCalls = 0
+  global.fetch = async () => {
+    disabledFetchCalls += 1
+    throw new Error('disabled adapter must not forward')
+  }
   let response = await run()
   assert.equal(response.statusCode, 503)
   assert.equal(response.result.code, 'planner_delivery_not_active')
+  assert.equal(disabledFetchCalls, 0)
+  global.fetch = originalFetch
 
   resetEnv()
   delete process.env.MASTER_SCAPES_PLANNER_ASSIGNEE_USER_ID

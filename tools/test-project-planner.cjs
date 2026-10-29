@@ -19,6 +19,7 @@ const checks = [
   ['materials prefill remains off until encoding is proven', submissionConfig.includes('materialsPrefill') && submissionConfig.includes('encoding: "unverified"')],
   ['native URL excludes personal and consent fields', !/(fullName|phone|email|location|consent):\s*["'](?:single_|checkbox_)/.test(submissionConfig) && plannerJs.includes('No personal information or consent was added')],
   ['native provider owns submission success', plannerJs.includes('Receipt is confirmed inside that form') && !plannerJs.includes('addEventListener("message"')],
+  ['native branch returns before receiver fetch', plannerJs.indexOf('if (!usesReceiver)') > -1 && plannerJs.indexOf('if (!usesReceiver)') < plannerJs.indexOf('fetch("/api/project-planner-submit"')],
   ['planner contains no browser persistence primitive', !/\b(localStorage|sessionStorage|indexedDB)\b/.test(plannerJs)],
   ['review remains editable', plannerJs.includes('data-edit="${stepIndex}"') && plannerJs.includes('currentStep = Number(button.dataset.edit)')],
   ['review states the no-score boundary', plannerJs.includes('does not calculate a score, assign a fit label, or estimate pricing')],

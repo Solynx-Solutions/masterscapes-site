@@ -126,6 +126,7 @@ async function runFlow(browser, name, viewport, deliverySucceeds = true) {
 
 async function runNativeHandoff(browser, name, viewport) {
   const context = await browser.newContext({ viewport });
+  const writes = [];
   await context.route('**/*', async route => {
     const url = route.request().url();
     if (url.startsWith('https://link.masterscapes.pro/widget/survey/')) {
@@ -139,12 +140,15 @@ async function runNativeHandoff(browser, name, viewport) {
     return route.abort('blockedbyclient');
   });
   const page = await context.newPage();
+  page.on('request', request => {
+    if (!['GET', 'HEAD'].includes(request.method())) writes.push(`${request.method()} ${request.url()}`);
+  });
   await page.addInitScript(() => {
     window.MASTER_SCAPES_PLANNER_SUBMISSION = {
       mode: 'native',
       native: {
         enabled: true,
-        surveyUrl: 'https://link.masterscapes.pro/widget/survey/Tp94Vzomz8umXh1V9zgW',
+        surveyUrl: 'https://link.masterscapes.pro/widget/survey/eC2FhSBs8UQw0imOhv5X',
         sourceValue: 'Master Scapes Project Planner',
         queryKeys: {
           projectType: 'single_dropdown_3mln',
@@ -192,6 +196,7 @@ async function runNativeHandoff(browser, name, viewport) {
   assert(nativeUrl.searchParams.get('single_dropdown_4kx2') === '1–3 Months', `${name} prefills timeline with the verified key`);
   assert(!nativeUrl.searchParams.has('checkbox_1828'), `${name} leaves materials visible and unprefilled until encoding is proven`);
   assert(!['full_name', 'email', 'phone', 'address1', 'location', 'consent'].some(key => nativeUrl.searchParams.has(key)), `${name} places no personal or consent data in the URL`);
+  assert(!writes.some(item => item.includes('/api/project-planner-submit')), `${name} native mode never calls the receiver adapter`);
   assert(await page.getByText('Project plan received').count() === 0, `${name} does not invent a parent-page success state`);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   assert(overflow <= 1, `${name} has no visible horizontal overflow`);
