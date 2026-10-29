@@ -200,7 +200,7 @@
         </label>
         <p class="consent-links"><a href="../privacy.html">Privacy Policy</a> · <a href="../terms.html">Terms of Service</a></p>
       </div>` : `
-      <p class="review-disclosure"><strong>Secure final step:</strong> ${nativeReviewCopy} Materials remain visible there for confirmation; they are not placed in the URL while checkbox encoding is unverified.</p>`;
+      <p class="review-disclosure"><strong>Secure final step:</strong> ${nativeReviewCopy} Please review and confirm your material choices before submitting.</p>`;
 
     renderStepFrame(`
       <p class="eyebrow">Your project at a glance</p>
@@ -258,7 +258,7 @@
           <p class="eyebrow">Secure final step</p>
           <h2 tabindex="-1">Add your contact details and submit.</h2>
           <p>Confirm the visible project selections, enter your contact details, and choose consent in the Master Scapes form below. Receipt is confirmed inside that form after it is submitted.</p>
-          <p class="native-boundary">No personal information or consent was added to this page URL. Materials remain visible for you to confirm manually.</p>
+          <p class="native-boundary">Your material choices are not carried over automatically. Please confirm them before submitting.</p>
           <button class="text-button" type="button" data-action="back-to-review">Back to project review</button>
         </div>
         <iframe class="native-submit-frame" src="${escapeHtml(nativeSubmitUrl)}" title="Master Scapes project consultation request" loading="eager" referrerpolicy="strict-origin-when-cross-origin"></iframe>
