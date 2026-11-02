@@ -252,14 +252,26 @@
   }
 
   function renderNativeSubmit() {
+    if (!nativeSubmitUrl) {
+      app.innerHTML = `
+        <section class="native-submit native-submit-error">
+          <div class="native-submit-head">
+            <p class="eyebrow">Project planner</p>
+            <h1 tabindex="-1">Online planning is temporarily unavailable.</h1>
+            <p>${escapeHtml(submissionMessage || "Please call Master Scapes to start your project conversation.")}</p>
+            <a class="primary-button" href="tel:+12098857098">Call 209-885-7098</a>
+          </div>
+        </section>`;
+      focusHeading();
+      return;
+    }
     app.innerHTML = `
       <section class="native-submit">
         <div class="native-submit-head">
-          <p class="eyebrow">Secure final step</p>
-          <h2 tabindex="-1">Add your contact details and submit.</h2>
-          <p>Confirm the visible project selections, enter your contact details, and choose consent in the Master Scapes form below. Receipt is confirmed inside that form after it is submitted.</p>
-          <p class="native-boundary">Your material choices are not carried over automatically. Please confirm them before submitting.</p>
-          <button class="text-button" type="button" data-action="back-to-review">Back to project review</button>
+          <p class="eyebrow">Master Scapes project planner</p>
+          <h1 tabindex="-1">Tell us about your outdoor project.</h1>
+          <p>Tell us about your project, then add your contact details below.</p>
+          <p class="native-boundary">Nothing is sent until you use the form’s submit button.</p>
         </div>
         <iframe class="native-submit-frame" src="${escapeHtml(nativeSubmitUrl)}" title="Master Scapes project consultation request" loading="eager" referrerpolicy="strict-origin-when-cross-origin"></iframe>
       </section>`;
@@ -268,6 +280,7 @@
 
   function render() {
     validationMessage = "";
+    if (submissionMode === "native") return renderNativeSubmit();
     if (currentStep === -1) return renderLanding();
     const step = steps[currentStep];
     if (step.id === "contact") return renderContact();
@@ -310,34 +323,15 @@
     if (surveyUrl.protocol !== "https:" || surveyUrl.hostname !== "link.masterscapes.pro" || !surveyUrl.pathname.startsWith("/widget/survey/")) {
       return "The secure submission form is not configured.";
     }
-    const requiredKeys = ["projectType", "materials", "squareFootage", "budget", "timeline"];
-    if (requiredKeys.some(key => !/^[a-z0-9_]{4,80}$/i.test(nativeConfig.queryKeys?.[key] || ""))) {
-      return "The project-field mapping is incomplete.";
-    }
     const verificationKeys = ["surveyOpen", "contactFieldsVisible", "consentVisible", "thankYouAndConsultationLink", "notificationSettingsReadBack"];
     if (verificationKeys.some(key => nativeConfig.verified?.[key] !== true)) {
       return "The secure submission form is still being verified.";
-    }
-    if (nativeConfig.materialsPrefill?.enabled === true && nativeConfig.materialsPrefill?.encoding !== "verified-repeat") {
-      return "The materials prefill format has not been verified.";
     }
     return "";
   }
 
   function buildNativeSubmitUrl() {
     const url = new URL(nativeConfig.surveyUrl);
-    const singleAnswers = {
-      projectType: answers.projectType,
-      squareFootage: answers.squareFootage,
-      budget: answers.budget,
-      timeline: answers.timeline
-    };
-    Object.entries(singleAnswers).forEach(([answerKey, value]) => {
-      url.searchParams.set(nativeConfig.queryKeys[answerKey], value);
-    });
-    if (nativeConfig.materialsPrefill?.enabled === true && nativeConfig.materialsPrefill.encoding === "verified-repeat") {
-      answers.materials.forEach(value => url.searchParams.append(nativeConfig.queryKeys.materials, value));
-    }
     if (nativeConfig.sourceValue) url.searchParams.set("source", nativeConfig.sourceValue);
     return url.toString();
   }
@@ -516,5 +510,9 @@
     }
   });
 
+  if (submissionMode === "native") {
+    submissionMessage = nativeConfigurationError();
+    if (!submissionMessage) nativeSubmitUrl = buildNativeSubmitUrl();
+  }
   render();
 })();

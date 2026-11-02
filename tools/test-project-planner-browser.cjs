@@ -49,7 +49,7 @@ async function runFlow(browser, name, viewport, deliverySucceeds = true) {
 
   await homeCta.click();
   await page.waitForURL('**/project-planner/');
-  assert(await page.title() === 'Masterscapes Luxury Project Qualification Quiz', `${name} planner uses the approved title`);
+  assert(await page.title() === 'Master Scapes Project Planner', `${name} planner uses the approved title`);
   await page.getByRole('button', { name: 'Plan my project' }).click();
 
   await page.getByRole('button', { name: 'Continue' }).click();
@@ -150,14 +150,6 @@ async function runNativeHandoff(browser, name, viewport) {
         enabled: true,
         surveyUrl: 'https://link.masterscapes.pro/widget/survey/eC2FhSBs8UQw0imOhv5X',
         sourceValue: 'Master Scapes Project Planner',
-        queryKeys: {
-          projectType: 'single_dropdown_3mln',
-          materials: 'checkbox_1828',
-          squareFootage: 'single_dropdown_491j',
-          budget: 'single_dropdown_4q2j',
-          timeline: 'single_dropdown_4kx2'
-        },
-        materialsPrefill: { enabled: false, encoding: 'unverified' },
         verified: {
           surveyOpen: true,
           contactFieldsVisible: true,
@@ -171,31 +163,13 @@ async function runNativeHandoff(browser, name, viewport) {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto(`${baseUrl}/project-planner/`, { waitUntil: 'domcontentloaded' });
-  await page.getByRole('button', { name: 'Plan my project' }).click();
-  await page.getByRole('button', { name: 'Luxury Patio' }).click();
-  await page.getByRole('button', { name: 'Continue' }).click();
-  await page.getByRole('button', { name: 'Premium Pavers' }).click();
-  await page.getByRole('button', { name: 'Natural Stone' }).click();
-  await page.getByRole('button', { name: 'Continue' }).click();
-  await page.getByRole('button', { name: '600–1,000 sq ft' }).click();
-  await page.getByRole('button', { name: 'Continue' }).click();
-  await page.getByRole('button', { name: '$75,000 – $120,000' }).click();
-  await page.getByRole('button', { name: 'Continue' }).click();
-  await page.getByRole('button', { name: '1–3 Months' }).click();
-  await page.getByRole('button', { name: 'Continue' }).click();
-
-  assert(await page.getByRole('heading', { name: 'Review your project plan' }).isVisible(), `${name} reaches the editable project summary`);
-  assert(await page.getByText('Contact', { exact: true }).count() === 0, `${name} collects no contact data in the custom planner`);
-  await page.getByRole('button', { name: 'Continue to contact details' }).click();
-  await page.getByRole('heading', { name: 'Add your contact details and submit.' }).waitFor();
+  await page.getByRole('heading', { name: 'Tell us about your outdoor project.' }).waitFor();
   const src = await page.locator('iframe.native-submit-frame').getAttribute('src');
   const nativeUrl = new URL(src);
-  assert(nativeUrl.searchParams.get('single_dropdown_3mln') === 'Luxury Patio', `${name} prefills project type with the verified key`);
-  assert(nativeUrl.searchParams.get('single_dropdown_491j') === '600–1,000 sq ft', `${name} prefills area with the verified key`);
-  assert(nativeUrl.searchParams.get('single_dropdown_4q2j') === '$75,000 – $120,000', `${name} prefills budget with the verified key`);
-  assert(nativeUrl.searchParams.get('single_dropdown_4kx2') === '1–3 Months', `${name} prefills timeline with the verified key`);
-  assert(!nativeUrl.searchParams.has('checkbox_1828'), `${name} leaves materials visible and unprefilled until encoding is proven`);
+  assert(nativeUrl.pathname.endsWith('/widget/survey/eC2FhSBs8UQw0imOhv5X'), `${name} embeds the verified native questionnaire`);
+  assert(!['single_dropdown_3mln', 'checkbox_1828', 'single_dropdown_491j', 'single_dropdown_4q2j', 'single_dropdown_4kx2'].some(key => nativeUrl.searchParams.has(key)), `${name} has no duplicate-question handoff parameters`);
   assert(!['full_name', 'email', 'phone', 'address1', 'location', 'consent'].some(key => nativeUrl.searchParams.has(key)), `${name} places no personal or consent data in the URL`);
+  assert(await page.getByRole('button', { name: 'Plan my project' }).count() === 0, `${name} does not render the removed outer questionnaire`);
   assert(!writes.some(item => item.includes('/api/project-planner-submit')), `${name} native mode never calls the receiver adapter`);
   assert(await page.getByText('Project plan received').count() === 0, `${name} does not invent a parent-page success state`);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
