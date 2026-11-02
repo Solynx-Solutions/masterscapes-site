@@ -34,6 +34,43 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Financing discovery notice. It stays compact in the upper corner so it
+    // cannot cover the bottom-corner chat widget or consent controls.
+    const financingDismissKey = 'ms_financing_notice_dismissed';
+    let financingNoticeDismissed = false;
+    try {
+        financingNoticeDismissed = sessionStorage.getItem(financingDismissKey) === '1';
+    } catch (error) {
+        // Storage can be unavailable in strict privacy modes; the notice still
+        // works for the current page without treating storage as required.
+    }
+
+    if (navMenu && !financingNoticeDismissed) {
+        const financingNotice = document.createElement('aside');
+        const financingHref = document.getElementById('financing') ? '#financing' : '/#financing';
+        financingNotice.className = 'financing-notice';
+        financingNotice.setAttribute('aria-label', 'Financing available');
+        financingNotice.innerHTML = `
+            <button class="financing-notice-close" type="button" aria-label="Dismiss financing notice">&times;</button>
+            <span class="financing-notice-eyebrow">Financing available</span>
+            <a class="financing-notice-link" href="${financingHref}">Explore Hearth and HFS options <span aria-hidden="true">&rarr;</span></a>
+        `;
+
+        const dismissFinancingNotice = () => {
+            financingNotice.classList.add('is-dismissed');
+            try {
+                sessionStorage.setItem(financingDismissKey, '1');
+            } catch (error) {
+                // Keep the current-page dismissal even when storage is blocked.
+            }
+            setTimeout(() => financingNotice.remove(), 240);
+        };
+
+        financingNotice.querySelector('.financing-notice-close').addEventListener('click', dismissFinancingNotice);
+        financingNotice.querySelector('.financing-notice-link').addEventListener('click', dismissFinancingNotice);
+        document.body.appendChild(financingNotice);
+    }
+
     // Header Shadow & Background on Scroll
     const progressBar = document.querySelector('.scroll-progress');
     const handleScroll = () => {
