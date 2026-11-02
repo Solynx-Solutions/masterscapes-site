@@ -751,6 +751,62 @@ section {
     font-weight: 400;
 }
 
+/* Financing Section */
+.financing {
+    background: var(--primary-dark);
+}
+
+.financing-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+    max-width: 1080px;
+    margin: 0 auto;
+}
+
+.financing-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 100%;
+    padding: clamp(32px, 5vw, 56px);
+    background: var(--secondary-dark);
+    border: 1px solid var(--glass-border);
+}
+
+.financing-provider {
+    margin-bottom: 16px;
+    color: var(--accent-gold);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+}
+
+.financing-card h3 {
+    margin-bottom: 18px;
+    color: var(--text-light);
+    font: 600 clamp(28px, 3vw, 40px)/1.05 'Cormorant Garamond', Georgia, serif;
+}
+
+.financing-card > p:not(.financing-provider) {
+    margin-bottom: 32px;
+    color: var(--text-gray);
+    font-size: 17px;
+}
+
+.financing-link {
+    margin-top: auto;
+}
+
+.financing-disclosure {
+    max-width: 900px;
+    margin: 34px auto 0;
+    color: var(--text-gray);
+    font-size: 13px;
+    line-height: 1.7;
+    text-align: center;
+}
+
 /* About Section */
 .about {
     background: var(--secondary-dark);
@@ -1277,7 +1333,8 @@ section {
     /* ── Grids ───────────────────────────────────────────────────── */
     /* Mobile fix: all grids collapse to single column */
     .services-grid,
-    .gallery-grid {
+    .gallery-grid,
+    .financing-grid {
         grid-template-columns: 1fr;
     }
 
